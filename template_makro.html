@@ -141,11 +141,7 @@
                     <span>จัดการสินค้า</span>
                 </button>
 
-                <!-- Online Sync Button (Desktop) -->
-                <button onclick="openCloudModal()" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-sky-300 bg-sky-50 hover:bg-sky-100 text-xs font-medium text-sky-800 transition shadow-sm" title="ใช้งานออนไลน์ & ซิงค์ข้อมูล">
-                    <i class="fa-solid fa-cloud-arrow-up text-sky-600"></i>
-                    <span>ออนไลน์/ซิงค์</span>
-                </button>
+
 
                 <!-- Order History Button (Always visible icon) -->
                 <button onclick="openHistoryModal()" class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:px-3 sm:py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 transition shadow-sm" title="ประวัติการสั่งซื้อ">
@@ -180,13 +176,9 @@
                             <i class="fa-solid fa-clock-rotate-left text-indigo-600 w-4 text-center"></i>
                             <span class="font-semibold text-indigo-900">ประวัติการทำงานทั้งหมด (Activity Logs)</span>
                         </button>
-                        <button onclick="toggleMobileMenu(); openGitHubSettingsModal()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-slate-100 text-left transition">
-                            <i class="fa-brands fa-github text-slate-800 w-4 text-center"></i>
-                            <span>เชื่อมต่อ GitHub & Vercel</span>
-                        </button>
-                        <button onclick="toggleMobileMenu(); openCloudModal()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-sky-50 hover:text-sky-700 text-left transition">
-                            <i class="fa-solid fa-cloud-arrow-up text-sky-600 w-4 text-center"></i>
-                            <span>ออนไลน์ / สำรองข้อมูล</span>
+                        <button onclick="toggleMobileMenu(); openCloudModal()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-slate-50 text-left transition">
+                            <i class="fa-solid fa-file-export text-slate-500 w-4 text-center"></i>
+                            <span>สำรอง / กู้คืนข้อมูล (JSON Backup)</span>
                         </button>
                         <button onclick="toggleMobileMenu(); triggerPwaInstall()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-emerald-50 hover:text-emerald-700 text-left transition">
                             <i class="fa-solid fa-mobile-screen-button text-emerald-600 w-4 text-center"></i>
@@ -817,9 +809,7 @@
                         <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
                         <span id="sync-pending-label">ซิงค์ Cloud</span>
                     </button>
-                    <button type="button" onclick="openGitHubSettingsModal()" class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition" title="ตั้งค่า GitHub">
-                        <i class="fa-solid fa-gear text-sm"></i>
-                    </button>
+
                 </div>
             </div>
 
@@ -838,90 +828,6 @@
         </div>
     </div>
 
-    <!-- GITHUB & VERCEL SETTINGS MODAL -->
-    <div id="github-settings-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
-        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeGitHubSettingsModal()"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 flex flex-col z-10 space-y-4">
-            <!-- Header -->
-            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-                <div class="flex items-center gap-2">
-                    <i class="fa-brands fa-github text-slate-900 text-xl"></i>
-                    <h3 class="text-base font-bold text-slate-900">สถานะการเชื่อมต่อ GitHub & Cloud</h3>
-                </div>
-                <button onclick="closeGitHubSettingsModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Auto-Connected Banner -->
-            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-emerald-950 space-y-2">
-                <div class="flex items-center gap-2 font-bold text-sm text-emerald-800">
-                    <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
-                    <span>เชื่อมต่อ GitHub อัตโนมัติเรียบร้อยแล้ว</span>
-                </div>
-                <p class="text-xs text-emerald-800 leading-relaxed">
-                    คลังข้อมูล: <strong>boasnirut/order-np</strong><br>
-                    ระบบเชื่อมต่อและซิงค์ข้อมูลผ่าน Vercel Serverless Functions ให้อัตโนมัติ ทุกประวัติการสั่งซื้อและการจัดการสินค้าจะถูกบันทึกขึ้น GitHub โดยไม่ต้องตั้งค่าใดๆ เพิ่มเติม
-                </p>
-                <div class="pt-1 flex items-center gap-2">
-                    <a href="https://github.com/boasnirut/order-np" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-emerald-300 hover:bg-emerald-100/60 text-emerald-900 rounded-xl text-xs font-semibold shadow-xs transition">
-                        <i class="fa-brands fa-github"></i>
-                        <span>เปิดดู Repository บน GitHub</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Quick Action: Test Connection -->
-            <div class="space-y-2">
-                <button type="button" id="btn-test-gh" onclick="testGitHubConnection()" class="w-full py-2.5 px-4 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition shadow-sm active:scale-98">
-                    <i class="fa-solid fa-network-wired text-sm"></i>
-                    <span>ทดสอบการเชื่อมต่อ GitHub Cloud เดี๋ยวนี้</span>
-                </button>
-                <div id="gh-test-status" class="hidden p-3 rounded-xl text-xs"></div>
-            </div>
-
-            <!-- User Name Input -->
-            <div class="pt-2 border-t border-slate-100">
-                <label class="block font-semibold text-slate-700 text-xs mb-1">ชื่อผู้บันทึกการกระทำ (User Name)</label>
-                <div class="flex items-center gap-2">
-                    <input type="text" id="gh-user-input" placeholder="ครูนฤทธิ์" class="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-slate-800">
-                    <button type="button" onclick="saveGitHubSettings()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
-                        บันทึกชื่อ
-                    </button>
-                </div>
-            </div>
-
-            <!-- Advanced Custom Settings (Collapsed) -->
-            <details class="text-xs text-slate-500 pt-1">
-                <summary class="cursor-pointer hover:text-slate-800 font-medium select-none">
-                    ⚙️ ตั้งค่าขั้นสูง (กรณีต้องการเปลี่ยน Token หรือ Repository เอง)
-                </summary>
-                <div class="space-y-3 pt-3 mt-2 border-t border-slate-100">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">GitHub Repository (Owner/Repo)</label>
-                        <div class="flex items-center gap-2">
-                            <input type="text" id="gh-owner-input" placeholder="boasnirut" class="w-1/2 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
-                            <span class="text-slate-400 font-bold">/</span>
-                            <input type="text" id="gh-repo-input" placeholder="order-np" class="w-1/2 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Custom Personal Access Token (PAT)</label>
-                        <div class="relative">
-                            <input type="password" id="gh-token-input" placeholder="ปล่อยว่างไว้เพื่อใช้ระบบเชื่อมต่ออัตโนมัติ" class="w-full p-2 pr-9 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
-                            <button type="button" onclick="toggleTokenVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                                <i class="fa-solid fa-eye text-xs" id="icon-toggle-token"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <button type="button" onclick="saveGitHubSettings()" class="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl transition text-xs">
-                        บันทึกการตั้งค่ากำหนดเอง
-                    </button>
-                </div>
-            </details>
-        </div>
-    </div>
-
     <!-- ONLINE CAPABILITY & CLOUD BACKUP MODAL (NEW REQUIREMENT) -->
     <div id="online-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
         <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeCloudModal()"></div>
@@ -930,7 +836,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-globe text-sky-600 text-lg"></i>
-                    <h3 class="text-base font-bold text-slate-900">ใช้งานแบบออนไลน์ & ซิงค์ข้อมูล</h3>
+                    <h3 class="text-base font-bold text-slate-900">สำรองและนำเข้าข้อมูล (JSON Backup)</h3>
                 </div>
                 <button onclick="closeCloudModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
