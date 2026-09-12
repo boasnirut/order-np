@@ -15,7 +15,9 @@
     <!-- SheetJS for Excel Export -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- html2canvas for Image Export -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+        <!-- html2canvas for Image Export (Local + CDN fallback) -->
+    <script src="html2canvas.min.js"></script>
+    <script>if (typeof html2canvas === 'undefined') { document.write('<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"><\/script>'); }</script>
 
     <!-- PWA Settings (Progressive Web App for Mobile) -->
     <link rel="manifest" href="manifest.json">
@@ -66,7 +68,7 @@
         }
 
         @media print {
-            header, nav, #top-controls, #bottom-summary-bar, #cart-drawer, #history-modal, #print-control-modal, #product-mgmt-modal, #edit-product-modal, #online-modal, .no-print {
+            header, nav, #top-controls, #bottom-summary-bar, #cart-drawer, #history-modal, #print-control-modal, #order-image-modal, #product-mgmt-modal, #edit-product-modal, #online-modal, .no-print {
                 display: none !important;
             }
 
@@ -364,9 +366,9 @@
                     <span class="hidden lg:inline">คัดลอกรหัส</span>
                 </button>
 
-                <button onclick="prepareAndPrint()" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-md hover:shadow-lg active:scale-95">
-                    <i class="fa-solid fa-print"></i>
-                    <span>พิมพ์ใบสั่งของ (A4/รูป)</span>
+                <button onclick="prepareAndPrint()" class="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition shadow-md hover:shadow-lg active:scale-95" title="บันทึกรูปภาพ ส่ง LINE หรือสั่งพิมพ์ใบสั่งของ">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>บันทึก/พิมพ์ใบสั่งของ</span>
                 </button>
             </div>
         </div>
@@ -425,9 +427,14 @@
                         </button>
                     </div>
 
+                    <button onclick="prepareAndPrint()" class="w-full px-4 py-2.5 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-md">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <span>สร้างใบสั่งของ (บันทึกรูปภาพ / ส่ง LINE / PDF)</span>
+                    </button>
+
                     <button onclick="saveOrderDraft()" class="w-full px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition shadow-sm">
                         <i class="fa-solid fa-floppy-disk text-xs"></i>
-                        <span>บันทึกเป็นประวัติการสั่งซื้อ</span>
+                        <span>บันทึกเก็บเป็นประวัติการสั่งซื้อ</span>
                     </button>
                 </div>
             </div>
@@ -485,20 +492,74 @@
                 </div>
             </div>
 
-            <!-- ACTION BUTTONS: PRINT / PDF vs EXPORT IMAGE (NEW REQUIREMENT) -->
-            <div class="space-y-2 pt-3 border-t border-slate-100">
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="executePrint()" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition shadow-md">
-                        <i class="fa-solid fa-print"></i>
-                        <span>พิมพ์ / เซฟ PDF</span>
+            <!-- ACTION BUTTONS: PRINT / PDF vs EXPORT IMAGE & MOBILE SHARE -->
+            <div class="space-y-2.5 pt-3 border-t border-slate-100">
+                <!-- Mobile First: Save image & Share -->
+                <button onclick="exportPrintAsImage()" id="btn-export-image" class="w-full px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition shadow-md active:scale-98">
+                    <i class="fa-solid fa-file-image text-base"></i>
+                    <span>บันทึกเป็นรูปภาพ / แชร์ส่ง LINE (แนะนำบนมือถือ)</span>
+                </button>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button onclick="executePrint()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-sm">
+                        <i class="fa-solid fa-print text-sm"></i>
+                        <span>พิมพ์ / เซฟ PDF (AirPrint/PC)</span>
                     </button>
-                    <button onclick="exportPrintAsImage()" id="btn-export-image" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition shadow-md">
-                        <i class="fa-solid fa-image"></i>
-                        <span>บันทึกเป็นรูปภาพ</span>
+                    <button onclick="closePrintControlModal()" class="px-4 py-2.5 border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-medium rounded-xl transition">
+                        ปิดหน้าต่าง
                     </button>
                 </div>
-                <button onclick="closePrintControlModal()" class="w-full py-1.5 text-center text-slate-400 hover:text-slate-600 text-xs transition">
-                    ยกเลิก
+            </div>
+        </div>
+    </div>
+
+    <!-- ORDER IMAGE PREVIEW & SHARE MODAL (MOBILE-OPTIMIZED) -->
+    <div id="order-image-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
+        <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="closeOrderImageModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] flex flex-col z-10 overflow-hidden">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-3.5 sm:p-4 border-b border-slate-100 shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                        <i class="fa-solid fa-file-image"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900">ใบสั่งของพร้อมใช้งาน</h3>
+                        <p class="text-xs text-slate-500">บันทึกรูปภาพหรือแชร์ส่งต่อได้ทันที</p>
+                    </div>
+                </div>
+                <button onclick="closeOrderImageModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Instructions Banner -->
+            <div class="bg-amber-50 border-b border-amber-200/70 px-3.5 py-2.5 text-xs text-amber-800 flex items-start gap-2 shrink-0">
+                <i class="fa-solid fa-circle-info text-amber-600 text-sm shrink-0 mt-0.5"></i>
+                <div class="leading-relaxed">
+                    <strong>บนมือถือ:</strong> แตะปุ่ม <strong>"แชร์ / ส่ง LINE"</strong> หรือ <strong>กดค้างที่รูปภาพ</strong> เพื่อเลือก "บันทึกไปยัง 'รูปภาพ'" (Save to Photos) ได้ทันที
+                </div>
+            </div>
+
+            <!-- Image Scroll Container -->
+            <div class="flex-1 overflow-y-auto p-3 bg-slate-100/90 text-center flex items-center justify-center custom-scrollbar">
+                <img id="order-preview-img" src="" alt="ใบสั่งของ Makro สหกรณ์บ้านน้ำพร" class="max-w-full h-auto rounded-lg shadow-md border border-slate-300 select-all" style="-webkit-touch-callout: default; -webkit-user-select: auto;">
+            </div>
+
+            <!-- Action Buttons Footer -->
+            <div class="p-3.5 bg-white border-t border-slate-100 shrink-0 space-y-2">
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="shareOrderImage()" class="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
+                        <i class="fa-solid fa-share-nodes text-base"></i>
+                        <span>แชร์ / ส่ง LINE</span>
+                    </button>
+                    <button type="button" onclick="downloadOrderImageFile()" class="px-3 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
+                        <i class="fa-solid fa-download text-base"></i>
+                        <span>ดาวน์โหลดรูป</span>
+                    </button>
+                </div>
+                <button type="button" onclick="closeOrderImageModal()" class="w-full py-1.5 text-center text-slate-400 hover:text-slate-600 text-xs font-medium transition">
+                    ปิดหน้าต่าง
                 </button>
             </div>
         </div>
@@ -3069,27 +3130,148 @@
             document.getElementById('print-control-modal').classList.add('hidden');
         }
 
+        // Order Image State for Mobile Export & Web Share
+        let currentOrderImageBlob = null;
+        let currentOrderImageFilename = '';
+        let currentOrderImageDataUrl = '';
+
+        function openOrderImageModal(dataUrl) {
+            const modal = document.getElementById('order-image-modal');
+            const imgEl = document.getElementById('order-preview-img');
+            if (imgEl) imgEl.src = dataUrl;
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeOrderImageModal() {
+            const modal = document.getElementById('order-image-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function shareOrderImage() {
+            if (!currentOrderImageBlob) {
+                showToast('ไม่พบข้อมูลรูปภาพใบสั่งของ', 'error');
+                return;
+            }
+            const file = new File([currentOrderImageBlob], currentOrderImageFilename || 'ใบสั่งของ_Makro.png', { type: 'image/png' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        title: 'ใบสั่งของ Makro - สหกรณ์โรงเรียนบ้านน้ำพร',
+                        text: 'ใบสั่งของ Makro สหกรณ์โรงเรียนบ้านน้ำพร',
+                        files: [file]
+                    });
+                    showToast('แชร์ใบสั่งของเรียบร้อย', 'success');
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        showToast('การแชร์ไม่สำเร็จ: ' + err.message, 'error');
+                    }
+                }
+            } else {
+                downloadOrderImageFile();
+                showToast('อุปกรณ์นี้ไม่รองรับ Web Share API โดยตรง ระบบได้ดาวน์โหลดไฟล์ให้แล้ว หรือสามารถกดค้างที่รูปภาพเพื่อบันทึกได้ครับ', 'info');
+            }
+        }
+
+        function downloadOrderImageFile() {
+            if (!currentOrderImageDataUrl && !currentOrderImageBlob) {
+                showToast('ไม่พบข้อมูลรูปภาพ', 'error');
+                return;
+            }
+            try {
+                const link = document.createElement('a');
+                link.download = currentOrderImageFilename || `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${new Date().toISOString().slice(0, 10)}.png`;
+                if (currentOrderImageBlob) {
+                    link.href = URL.createObjectURL(currentOrderImageBlob);
+                } else {
+                    link.href = currentOrderImageDataUrl;
+                }
+                document.body.appendChild(link);
+                link.click();
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    if (currentOrderImageBlob) URL.revokeObjectURL(link.href);
+                }, 1200);
+                showToast('เริ่มดาวน์โหลดรูปภาพแล้ว (บนมือถือกดค้างที่รูปเพื่อบันทึกลงแกลเลอรีได้)', 'success');
+            } catch (e) {
+                showToast('กรุณากดค้างที่รูปภาพเพื่อบันทึกลงมือถือ', 'info');
+            }
+        }
+
         function executePrint() {
             state.printFilter = document.getElementById('print-filter-select').value;
             state.printWithImages = document.getElementById('print-toggle-images').checked;
             state.printWithPrices = document.getElementById('print-toggle-price').checked;
+            
+            // Check if running in iOS standalone PWA
+            const isIosStandalone = window.navigator.standalone === true || (window.matchMedia('(display-mode: standalone)').matches && /iphone|ipad|ipod/i.test(navigator.userAgent));
+            
+            if (isIosStandalone) {
+                // window.print() is disabled by iOS WebKit in standalone PWA mode
+                closePrintControlModal();
+                showToast('บนแอปมือถือ (iOS PWA) ระบบได้เปิด "บันทึกเป็นรูปภาพ/แชร์" ให้โดยอัตโนมัติ เพื่อให้บันทึกหรือพิมพ์ได้สะดวกครับ', 'info');
+                setTimeout(() => {
+                    exportPrintAsImage();
+                }, 300);
+                return;
+            }
+
             closePrintControlModal();
             generatePrintDOM();
+            saveOrderDraftSilently();
             setTimeout(() => {
                 window.print();
-            }, 200);
+            }, 250);
         }
 
-        // Export Print Area As Image (PNG) via html2canvas
-        function exportPrintAsImage() {
+        // Auto Save Draft Silently when generating order or exporting
+        function saveOrderDraftSilently() {
+            try {
+                const orderedItems = state.products.filter(p => state.cart[p.id] > 0);
+                if (orderedItems.length === 0) return;
+
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+                const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+                let totalUnits = 0;
+                let totalCost = 0;
+                orderedItems.forEach(p => {
+                    const qty = state.cart[p.id] || 0;
+                    totalUnits += qty;
+                    totalCost += ((p.cost || 0) * qty);
+                });
+
+                const entry = {
+                    id: Date.now(),
+                    timestamp: now.toISOString(),
+                    label: `สั่งของ Makro (${dateStr} ${timeStr})`,
+                    skus: orderedItems.length,
+                    units: totalUnits,
+                    totalCost: totalCost,
+                    cart: { ...state.cart }
+                };
+
+                state.history.unshift(entry);
+                if (state.history.length > 20) state.history.pop();
+                saveHistoryToStorage();
+                recordAction('create_order', `บันทึกการสั่งซื้อ (${dateStr} ${timeStr})`, `${orderedItems.length} รายการ | รวม ${totalUnits} ชิ้น | ยอดรวม ฿${totalCost.toLocaleString('th-TH', {minimumFractionDigits: 2})}`, { entry });
+            } catch (err) {
+                console.warn('saveOrderDraftSilently error:', err);
+            }
+        }
+
+        // Export Print Area As Image (PNG) via html2canvas (Rock-Solid for Mobile & Desktop)
+        async function exportPrintAsImage() {
             state.printFilter = document.getElementById('print-filter-select').value;
             state.printWithImages = document.getElementById('print-toggle-images').checked;
             state.printWithPrices = document.getElementById('print-toggle-price').checked;
             
             const btn = document.getElementById('btn-export-image');
-            const originalBtnHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังสร้างรูปภาพ...';
-            btn.disabled = true;
+            const originalBtnHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังสร้างรูปภาพใบสั่งของ...';
+                btn.disabled = true;
+            }
 
             generatePrintDOM();
             const printArea = document.getElementById('print-area');
@@ -3101,35 +3283,78 @@
             printArea.style.backgroundColor = '#ffffff';
             printArea.style.zIndex = '9999';
 
-            setTimeout(() => {
-                html2canvas(printArea, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#ffffff',
-                    windowWidth: 794
-                }).then(canvas => {
-                    printArea.style.display = 'none';
-                    printArea.style.position = 'static';
-                    printArea.style.zIndex = 'auto';
-                    btn.innerHTML = originalBtnHtml;
-                    btn.disabled = false;
-                    closePrintControlModal();
+            // Allow layout rendering
+            await new Promise(r => setTimeout(r, 260));
 
-                    const link = document.createElement('a');
-                    const dateStr = new Date().toISOString().slice(0, 10);
-                    link.download = `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${dateStr}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    showToast('บันทึกเป็นรูปภาพเรียบร้อยแล้ว!', 'success');
-                }).catch(err => {
-                    printArea.style.display = 'none';
+            try {
+                let canvas;
+                try {
+                    // First attempt: with images and CORS handling
+                    canvas = await html2canvas(printArea, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: false,
+                        backgroundColor: '#ffffff',
+                        windowWidth: 794,
+                        imageTimeout: 5000,
+                        logging: false
+                    });
+                } catch (canvasErr) {
+                    console.warn('html2canvas first attempt failed, retrying without external images:', canvasErr);
+                    // Safe fallback: temporarily hide images if cross-origin image tainted canvas
+                    const imgs = printArea.querySelectorAll('img');
+                    imgs.forEach(i => i.style.display = 'none');
+                    canvas = await html2canvas(printArea, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: false,
+                        backgroundColor: '#ffffff',
+                        windowWidth: 794,
+                        logging: false
+                    });
+                }
+
+                printArea.style.display = 'none';
+                printArea.style.position = 'static';
+                printArea.style.zIndex = 'auto';
+                if (btn) {
                     btn.innerHTML = originalBtnHtml;
                     btn.disabled = false;
-                    showToast('เกิดข้อผิดพลาดในการสร้างรูปภาพ: ' + err.message, 'error');
-                });
-            }, 300);
+                }
+                closePrintControlModal();
+
+                const now = new Date();
+                const dStr = now.toISOString().slice(0, 10);
+                const filename = `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${dStr}.png`;
+
+                // Convert canvas to blob
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        showToast('ไม่สามารถแปลงรูปภาพได้', 'error');
+                        return;
+                    }
+                    currentOrderImageBlob = blob;
+                    currentOrderImageFilename = filename;
+                    currentOrderImageDataUrl = canvas.toDataURL('image/png');
+
+                    // Auto-record draft order to history & GitHub activity log!
+                    saveOrderDraftSilently();
+
+                    // Open Preview & Share Modal
+                    openOrderImageModal(currentOrderImageDataUrl);
+                    showToast('สร้างรูปภาพใบสั่งของสำเร็จ!', 'success');
+                }, 'image/png');
+
+            } catch (err) {
+                printArea.style.display = 'none';
+                printArea.style.position = 'static';
+                printArea.style.zIndex = 'auto';
+                if (btn) {
+                    btn.innerHTML = originalBtnHtml;
+                    btn.disabled = false;
+                }
+                showToast('เกิดข้อผิดพลาดในการสร้างรูปภาพ: ' + err.message, 'error');
+            }
         }
 
         // Generate Print DOM (Supports Show/Hide Price & NO Signatures)
@@ -3177,7 +3402,7 @@
                         <td style="font-family: monospace; font-weight: bold; width: 68px;">${p.code || '-'}</td>
                         ${state.printWithImages ? `
                             <td style="text-align: center; width: 42px; padding: 2px;">
-                                ${imgSrc ? `<img src="${imgSrc}" style="width: 38px; height: 38px; object-fit: contain; margin: 0 auto;">` : ''}
+                                ${imgSrc ? `<img src="${imgSrc}" crossorigin="anonymous" onerror="this.style.display=\'none\'" style="width: 38px; height: 38px; object-fit: contain; margin: 0 auto;">` : ''}
                             </td>
                         ` : ''}
                         <td style="line-height: 1.25;">

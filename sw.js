@@ -1,9 +1,10 @@
-const CACHE_NAME = 'coop-makro-v7';
+const CACHE_NAME = 'coop-makro-v8';
 const ASSETS_TO_CACHE = [
   './',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './html2canvas.min.js'
 ];
 
 self.addEventListener('install', (event) => {
