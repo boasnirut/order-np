@@ -1,0 +1,3309 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order NP - ระบบสั่งของสหกรณ์โรงเรียนบ้านน้ำพร</title>
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- html2canvas for Image Export -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    <!-- PWA Settings (Progressive Web App for Mobile) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#e11d48">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Order NP">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" href="icon-192.png">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        makro: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @page {
+            size: A4 portrait;
+            margin: 8mm 10mm 8mm 10mm;
+        }
+
+        @media print {
+            header, nav, #top-controls, #bottom-summary-bar, #cart-drawer, #history-modal, #print-control-modal, #product-mgmt-modal, #edit-product-modal, #online-modal, .no-print {
+                display: none !important;
+            }
+
+            body, html {
+                background: white !important;
+                color: #000 !important;
+                font-size: 9.5pt !important;
+                line-height: 1.25 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            #print-area {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .page-break-avoid {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .print-table th, .print-table td {
+                border: 1px solid #94a3b8 !important;
+                padding: 4px 6px !important;
+            }
+        }
+
+        #toast {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col pb-28">
+
+        <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur shadow-sm border-b border-slate-200/80 no-print">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-2.5 flex items-center justify-between gap-2">
+            <!-- Logo & Title -->
+            <div class="flex items-center gap-2.5 min-w-0">
+                <img src="icon-192.png" alt="Order NP" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-sm border border-emerald-100 flex-shrink-0 object-cover">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-1.5 flex-nowrap">
+                        <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap">Order NP</h1>
+                        <span class="px-1.5 py-0.5 text-[10px] sm:text-xs font-semibold bg-rose-50 text-rose-600 rounded-full border border-rose-200 flex items-center gap-1 whitespace-nowrap">
+                            <i class="fa-solid fa-store text-[9px]"></i>Makro Pro
+                        </span>
+                    </div>
+                    <p class="text-[11px] sm:text-xs text-slate-500 truncate">สหกรณ์โรงเรียนบ้านน้ำพร</p>
+                </div>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <!-- Direct Makro Link (Desktop) -->
+                <a href="https://www.makro.pro/" target="_blank" class="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-rose-300 bg-slate-50 hover:bg-rose-50 text-xs font-medium text-slate-700 hover:text-rose-700 transition shadow-sm">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-rose-600"></i>
+                    <span>Makro Pro</span>
+                </a>
+
+                <!-- Manage Products Button (Desktop) -->
+                <button onclick="openProductMgmtModal()" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 transition shadow-sm" title="จัดการแคตตาล็อกสินค้า">
+                    <i class="fa-solid fa-boxes-stacked text-rose-600"></i>
+                    <span>จัดการสินค้า</span>
+                </button>
+
+                <!-- Online Sync Button (Desktop) -->
+                <button onclick="openCloudModal()" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-sky-300 bg-sky-50 hover:bg-sky-100 text-xs font-medium text-sky-800 transition shadow-sm" title="ใช้งานออนไลน์ & ซิงค์ข้อมูล">
+                    <i class="fa-solid fa-cloud-arrow-up text-sky-600"></i>
+                    <span>ออนไลน์/ซิงค์</span>
+                </button>
+
+                <!-- Order History Button (Always visible icon) -->
+                <button onclick="openHistoryModal()" class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:px-3 sm:py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 transition shadow-sm" title="ประวัติการสั่งซื้อ">
+                    <i class="fa-solid fa-clock-rotate-left text-slate-500 text-sm"></i>
+                    <span class="hidden sm:inline sm:ml-1.5">ประวัติ</span>
+                </button>
+
+                <!-- Cart Button (Always prominent) -->
+                <button onclick="openCartDrawer()" class="relative inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs sm:text-sm transition shadow-md hover:shadow-lg active:scale-95">
+                    <i class="fa-solid fa-basket-shopping text-sm sm:text-base"></i>
+                    <span class="hidden sm:inline">ตะกร้า</span>
+                    <span id="top-cart-badge" class="px-1.5 py-0.2 bg-white text-rose-700 rounded-full text-xs font-bold min-w-[20px] text-center shadow-inner">0</span>
+                </button>
+
+                <!-- Mobile Menu Dropdown Toggle Button -->
+                <div class="relative">
+                    <button onclick="toggleMobileMenu()" id="btn-mobile-menu" class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 transition shadow-sm" title="เมนูเพิ่มเติม">
+                        <i class="fa-solid fa-ellipsis-vertical text-base"></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="mobile-menu-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-1.5 z-50 text-xs font-medium text-slate-700">
+                        <button onclick="toggleMobileMenu(); openEditProductModal(null)" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-rose-50 hover:text-rose-700 text-left transition">
+                            <i class="fa-solid fa-bolt text-rose-600 w-4 text-center"></i>
+                            <span class="font-semibold text-rose-700">เพิ่มสินค้าจาก Makro Pro</span>
+                        </button>
+                        <button onclick="toggleMobileMenu(); openProductMgmtModal()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-slate-50 text-left transition">
+                            <i class="fa-solid fa-boxes-stacked text-slate-500 w-4 text-center"></i>
+                            <span>จัดการรายการสินค้าทั้งหมด</span>
+                        </button>
+                        <button onclick="toggleMobileMenu(); openActionHistoryModal()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-indigo-50 hover:text-indigo-700 text-left transition">
+                            <i class="fa-solid fa-clock-rotate-left text-indigo-600 w-4 text-center"></i>
+                            <span class="font-semibold text-indigo-900">ประวัติการทำงานทั้งหมด (Activity Logs)</span>
+                        </button>
+                        <button onclick="toggleMobileMenu(); openGitHubSettingsModal()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-slate-100 text-left transition">
+                            <i class="fa-brands fa-github text-slate-800 w-4 text-center"></i>
+                            <span>เชื่อมต่อ GitHub & Vercel</span>
+                        </button>
+                        <button onclick="toggleMobileMenu(); openCloudModal()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-sky-50 hover:text-sky-700 text-left transition">
+                            <i class="fa-solid fa-cloud-arrow-up text-sky-600 w-4 text-center"></i>
+                            <span>ออนไลน์ / สำรองข้อมูล</span>
+                        </button>
+                        <button onclick="toggleMobileMenu(); triggerPwaInstall()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-emerald-50 hover:text-emerald-700 text-left transition">
+                            <i class="fa-solid fa-mobile-screen-button text-emerald-600 w-4 text-center"></i>
+                            <span>วิธีติดตั้งแอปบนมือถือ</span>
+                        </button>
+                        <hr class="my-1 border-slate-100">
+                        <a href="https://www.makro.pro/" target="_blank" onclick="toggleMobileMenu()" class="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-slate-50 text-left transition text-slate-500">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 w-4 text-center"></i>
+                            <span>ไปที่เว็บไซต์ Makro Pro</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 pt-4 flex-1 w-full no-print">
+
+        <!-- FILTER & SEARCH CONTROLS -->
+        <div id="top-controls" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-3 sm:p-4 mb-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                
+                <!-- Category Pills -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none text-xs sm:text-sm font-medium">
+                    <button onclick="setCategory('all')" id="btn-cat-all" class="cat-btn px-3 py-1.5 rounded-xl bg-slate-900 text-white font-semibold transition shrink-0 shadow-sm">
+                        ทั้งหมด <span id="cat-count-all" class="text-xs opacity-75 font-normal">(243)</span>
+                    </button>
+                    <button onclick="setCategory('ขนม')" id="btn-cat-ขนม" class="cat-btn px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition shrink-0">
+                        🍿 ขนม <span id="cat-count-ขนม" class="text-xs opacity-75 font-normal">(137)</span>
+                    </button>
+                    <button onclick="setCategory('เครื่องดื่ม')" id="btn-cat-เครื่องดื่ม" class="cat-btn px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition shrink-0">
+                        🥤 เครื่องดื่ม <span id="cat-count-เครื่องดื่ม" class="text-xs opacity-75 font-normal">(55)</span>
+                    </button>
+                    <button onclick="setCategory('เครื่องปรุง-ทั่วไป')" id="btn-cat-เครื่องปรุง-ทั่วไป" class="cat-btn px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition shrink-0">
+                        🍳 เครื่องปรุง-ทั่วไป <span id="cat-count-เครื่องปรุง-ทั่วไป" class="text-xs opacity-75 font-normal">(51)</span>
+                    </button>
+                    <button onclick="setCategory('ordered')" id="btn-cat-ordered" class="cat-btn px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-semibold transition shrink-0">
+                        <i class="fa-solid fa-check-circle mr-1 text-emerald-600"></i>กำลังสั่ง <span id="btn-cat-ordered-count" class="text-xs font-bold text-emerald-700">(0)</span>
+                    </button>
+                </div>
+
+                <!-- Search & View Mode Switcher -->
+                <div class="flex items-center gap-2">
+                    <div class="relative flex-1 md:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="search-input" oninput="onSearchInput(this.value)" placeholder="ค้นชื่อ, รหัส Makro, บาร์โค้ด..." 
+                               class="w-full pl-8 pr-8 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition">
+                        <button id="search-clear-btn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-circle-xmark text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
+                        <button onclick="setViewMode('grid')" id="btn-view-grid" title="มุมมองการ์ด" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-800 shadow-sm transition">
+                            <i class="fa-solid fa-table-cells-large"></i>
+                        </button>
+                        <button onclick="setViewMode('table')" id="btn-view-table" title="มุมมองตาราง" class="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 transition">
+                            <i class="fa-solid fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Filter Status & Clear Button -->
+            <div class="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+                <div class="flex items-center gap-2">
+                    <span id="filter-status-text">แสดงทั้งหมด 243 รายการ</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openEditProductModal(null)" class="text-rose-600 hover:text-rose-700 font-medium flex items-center gap-1 transition">
+                        <i class="fa-solid fa-circle-plus text-xs"></i>
+                        <span>เพิ่มสินค้าใหม่</span>
+                    </button>
+                    <span class="text-slate-300">|</span>
+                    <button onclick="clearCartConfirm()" class="text-slate-500 hover:text-rose-600 flex items-center gap-1 transition">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                        <span>ล้างรายการที่สั่ง</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATALOG CONTAINER -->
+        <!-- 1. Grid View Container -->
+        <div id="catalog-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+            <!-- Generated dynamically -->
+        </div>
+
+        <!-- 2. Table View Container -->
+        <div id="catalog-table-wrapper" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto max-h-[70vh] custom-scrollbar">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="sticky top-0 bg-slate-100 text-slate-700 font-semibold border-b border-slate-200 z-10">
+                        <tr>
+                            <th class="p-2.5 w-10 text-center">#</th>
+                            <th class="p-2.5 w-24">รหัส Makro</th>
+                            <th class="p-2.5 w-14 text-center">รูป</th>
+                            <th class="p-2.5">ชื่อสินค้า / ขนาดบรรจุ</th>
+                            <th class="p-2.5 w-24">หมวดหมู่</th>
+                            <th class="p-2.5 w-24 text-right">ราคาส่ง/EA</th>
+                            <th class="p-2.5 w-16 text-center">หน่วย</th>
+                            <th class="p-2.5 w-20 text-right">ราคาขาย</th>
+                            <th class="p-2.5 w-36 text-center bg-rose-50/70 border-x border-rose-200">จำนวนสั่ง</th>
+                            <th class="p-2.5 w-24 text-right">รวมเงิน</th>
+                            <th class="p-2.5 w-24 text-center">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="catalog-table-body" class="divide-y divide-slate-100">
+                        <!-- Generated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Empty State Message -->
+        <div id="empty-state" class="hidden py-16 text-center">
+            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-2xl">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3 class="text-base font-semibold text-slate-700">ไม่พบรายการสินค้าที่ค้นหา</h3>
+            <p class="text-xs text-slate-500 mt-1">ลองค้นหาด้วยชื่ออื่น หรือสลับไปดูหมวดหมู่ทั้งหมด</p>
+            <button onclick="resetFilters()" class="mt-3 px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-medium transition">
+                ล้างการค้นหา
+            </button>
+        </div>
+
+    </main>
+
+    <!-- STICKY BOTTOM SUMMARY BAR -->
+    <div id="bottom-summary-bar" class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-2xl z-40 no-print transition-all">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-3">
+            
+            <!-- Left: Order Stats -->
+            <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+                <div>
+                    <span class="text-xs text-slate-500 block">รายการที่เลือกสั่ง</span>
+                    <div class="flex items-baseline gap-1.5">
+                        <span id="bar-total-skus" class="text-lg font-bold text-slate-900">0</span>
+                        <span class="text-xs text-slate-500">รายการ</span>
+                        <span class="text-slate-300">|</span>
+                        <span id="bar-total-units" class="text-sm font-semibold text-slate-700">0</span>
+                        <span class="text-xs text-slate-500">หน่วย</span>
+                    </div>
+                </div>
+
+                <div class="h-8 w-px bg-slate-200 hidden sm:block"></div>
+
+                <div>
+                    <span class="text-xs text-slate-500 block">ยอดรวมราคาส่ง (Makro)</span>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-xs font-semibold text-rose-600">฿</span>
+                        <span id="bar-total-cost" class="text-xl font-extrabold text-rose-600 tracking-tight">0.00</span>
+                    </div>
+                </div>
+
+                <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+
+                <div class="hidden md:block">
+                    <span class="text-xs text-slate-500 block">ยอดขายคาดการณ์</span>
+                    <div class="flex items-baseline gap-1 text-xs text-slate-600">
+                        <span>฿</span><span id="bar-est-revenue" class="font-medium">0.00</span>
+                        <span class="ml-1 text-emerald-600 font-semibold">(กำไร <span id="bar-est-profit">+0.00</span>)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Action Buttons -->
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button onclick="openCartDrawer()" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-xs sm:text-sm flex items-center justify-center gap-1.5 transition shadow-sm">
+                    <i class="fa-solid fa-list-check text-slate-600"></i>
+                    <span>ตรวจดูรายการ</span>
+                </button>
+
+                <button onclick="copyMakroCodes()" title="คัดลอกรหัสสินค้า Makro ทั้งหมดเพื่อนำไปสั่งซื้อ" class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-medium flex items-center gap-1.5 transition shadow-sm">
+                    <i class="fa-solid fa-copy text-rose-600"></i>
+                    <span class="hidden lg:inline">คัดลอกรหัส</span>
+                </button>
+
+                <button onclick="prepareAndPrint()" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-md hover:shadow-lg active:scale-95">
+                    <i class="fa-solid fa-print"></i>
+                    <span>พิมพ์ใบสั่งของ (A4/รูป)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART SLIDE-OVER DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden no-print" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onclick="closeCartDrawer()"></div>
+
+        <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+            <div class="pointer-events-auto w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                
+                <div class="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">รายการสั่งของ Makro</h2>
+                            <p class="text-xs text-slate-500" id="drawer-header-subtitle">0 รายการที่เลือกสั่ง</p>
+                        </div>
+                    </div>
+                    <button onclick="closeCartDrawer()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-200/50 transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4 divide-y divide-slate-100 custom-scrollbar" id="drawer-items-list">
+                    <!-- Rendered dynamically -->
+                </div>
+
+                <div class="p-4 border-t border-slate-200 bg-slate-50 space-y-3">
+                    <div class="space-y-1.5 text-xs text-slate-600">
+                        <div class="flex justify-between">
+                            <span>จำนวนรายการทั้งหมด</span>
+                            <span class="font-medium text-slate-800" id="drawer-summary-skus">0 รายการ</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>จำนวนหน่วยสินค้ารวม</span>
+                            <span class="font-medium text-slate-800" id="drawer-summary-units">0 หน่วย</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold text-slate-900 pt-1 border-t border-slate-200">
+                            <span>ยอดเงินรวมราคาส่ง</span>
+                            <span class="text-rose-600" id="drawer-summary-total">฿0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <button onclick="copyLineOrder()" class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm">
+                            <i class="fa-brands fa-line text-emerald-600 text-base"></i>
+                            <span>คัดลอกส่ง LINE</span>
+                        </button>
+                        <button onclick="exportToExcel()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm">
+                            <i class="fa-solid fa-file-excel text-sm"></i>
+                            <span>ส่งออก Excel</span>
+                        </button>
+                    </div>
+
+                    <button onclick="saveOrderDraft()" class="w-full px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition shadow-sm">
+                        <i class="fa-solid fa-floppy-disk text-xs"></i>
+                        <span>บันทึกเป็นประวัติการสั่งซื้อ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRINT PREVIEW & PRINT CONTROL MODAL -->
+    <div id="print-control-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closePrintControlModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 z-10">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-print text-rose-600 text-lg"></i>
+                    <h3 class="text-base font-bold text-slate-900">ตัวเลือกการพิมพ์และส่งออกใบสั่งของ</h3>
+                </div>
+                <button onclick="closePrintControlModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <div class="py-4 space-y-3.5 text-xs sm:text-sm">
+                <!-- Select Category -->
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">หมวดหมู่ที่ต้องการพิมพ์:</label>
+                    <select id="print-filter-select" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500">
+                        <option value="all">รวมสั่งทั้งหมด (ขนม + เครื่องดื่ม + เครื่องปรุง)</option>
+                        <option value="ขนม">เฉพาะหมวดขนม</option>
+                        <option value="เครื่องดื่ม">เฉพาะหมวดเครื่องดื่ม</option>
+                        <option value="เครื่องปรุง-ทั่วไป">เฉพาะหมวดเครื่องปรุง-ทั่วไป</option>
+                    </select>
+                </div>
+
+                <!-- Toggle Price (NEW REQUIREMENT) -->
+                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <div>
+                        <span class="font-medium text-slate-800 block">แสดงราคาในใบสั่งของ</span>
+                        <span class="text-xs text-slate-500">เปิดเพื่อแสดงราคาส่งและยอดรวม / ปิดเพื่อซ่อนราคา (แสดงเฉพาะจำนวนและรายการ)</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3">
+                        <input type="checkbox" id="print-toggle-price" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-600"></div>
+                    </label>
+                </div>
+
+                <!-- Toggle Images -->
+                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <div>
+                        <span class="font-medium text-slate-800 block">พิมพ์รูปภาพสินค้า</span>
+                        <span class="text-xs text-slate-500">เปิดไว้เพื่อให้คนไปช่วยเดินหยิบในห้างดูรูปได้ง่าย</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3">
+                        <input type="checkbox" id="print-toggle-images" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-600"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS: PRINT / PDF vs EXPORT IMAGE (NEW REQUIREMENT) -->
+            <div class="space-y-2 pt-3 border-t border-slate-100">
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="executePrint()" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition shadow-md">
+                        <i class="fa-solid fa-print"></i>
+                        <span>พิมพ์ / เซฟ PDF</span>
+                    </button>
+                    <button onclick="exportPrintAsImage()" id="btn-export-image" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition shadow-md">
+                        <i class="fa-solid fa-image"></i>
+                        <span>บันทึกเป็นรูปภาพ</span>
+                    </button>
+                </div>
+                <button onclick="closePrintControlModal()" class="w-full py-1.5 text-center text-slate-400 hover:text-slate-600 text-xs transition">
+                    ยกเลิก
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT MANAGEMENT MODAL (CRUD) -->
+    <div id="product-mgmt-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeProductMgmtModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-4 sm:p-6 max-h-[90vh] flex flex-col z-10">
+            
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-boxes-stacked text-rose-600 text-lg"></i>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">จัดการรายการสินค้า Makro (เพิ่ม / ลบ / แก้ไข)</h3>
+                        <p class="text-xs text-slate-500">สามารถเพิ่มสินค้าใหม่ แก้ไขราคาส่ง/ราคาขาย หรือลบสินค้าได้</p>
+                    </div>
+                </div>
+                <button onclick="closeProductMgmtModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Controls bar -->
+            <div class="py-3 flex flex-wrap items-center justify-between gap-2 border-b border-slate-100">
+                <div class="flex items-center gap-2 flex-1 min-w-[240px]">
+                    <div class="relative w-full max-w-xs">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="mgmt-search-input" oninput="renderMgmtTable()" placeholder="ค้นหาสินค้าเพื่อแก้ไข..." class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500">
+                    </div>
+                    <select id="mgmt-cat-select" onchange="renderMgmtTable()" class="p-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        <option value="all">ทุกหมวดหมู่</option>
+                        <option value="ขนม">ขนม</option>
+                        <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+                        <option value="เครื่องปรุง-ทั่วไป">เครื่องปรุง-ทั่วไป</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="openEditProductModal(null)" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>เพิ่มสินค้าใหม่</span>
+                    </button>
+                    <button onclick="resetProductsToDefaultConfirm()" class="px-3 py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-xl text-xs font-medium border border-slate-200 transition" title="รีเซ็ตสินค้ากลับสู่ค่าเดิมของโรงเรียน">
+                        <i class="fa-solid fa-rotate-left mr-1"></i>คืนค่าเดิม
+                    </button>
+                </div>
+            </div>
+
+            <!-- Management Table -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar my-2 border border-slate-100 rounded-xl">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="sticky top-0 bg-slate-100 text-slate-700 font-semibold border-b border-slate-200 z-10">
+                        <tr>
+                            <th class="p-2 w-12 text-center">รูป</th>
+                            <th class="p-2 w-24">รหัส Makro</th>
+                            <th class="p-2">ชื่อสินค้า / ขนาด</th>
+                            <th class="p-2 w-24">หมวดหมู่</th>
+                            <th class="p-2 w-20 text-right">ราคาส่ง/EA</th>
+                            <th class="p-2 w-16 text-center">หน่วย</th>
+                            <th class="p-2 w-20 text-right">ราคาขาย</th>
+                            <th class="p-2 w-24 text-center">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mgmt-table-body" class="divide-y divide-slate-100">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pt-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
+                <span id="mgmt-count-info">รวม 243 รายการ</span>
+                <button onclick="closeProductMgmtModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition font-medium">
+                    ปิด
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD / EDIT PRODUCT MODAL -->
+    <div id="edit-product-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeEditProductModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-5 max-h-[90vh] flex flex-col z-20">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <h3 id="edit-product-title" class="text-base font-bold text-slate-900">เพิ่มสินค้าใหม่</h3>
+                <button onclick="closeEditProductModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+                        <form id="product-form" onsubmit="saveProductForm(event)" class="flex-1 overflow-y-auto custom-scrollbar py-3 space-y-3 text-xs sm:text-sm">
+                <input type="hidden" id="edit-prod-id">
+
+                <!-- Smart Makro Pro Fetcher Section (ค้นหาและเลือกสินค้าที่ตรง/ใกล้เคียง) -->
+                <div class="p-3.5 bg-gradient-to-r from-rose-50/90 via-red-50/70 to-rose-50/90 border border-rose-200 rounded-2xl space-y-2.5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-rose-900 flex items-center gap-1.5">
+                            <span class="w-5 h-5 rounded-full bg-rose-600 text-white flex items-center justify-center text-[10px] shadow-sm"><i class="fa-solid fa-bolt"></i></span>
+                            <span>ดึงข้อมูลสินค้าจาก Makro Pro อัตโนมัติ</span>
+                        </span>
+                        <span id="makro-fetch-status" class="text-[11px] text-slate-500 font-medium">พิมพ์ชื่อสินค้าเพื่อค้นหาตัวที่ตรง/ใกล้เคียง</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <div class="relative flex-1">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-rose-400 text-xs"></i>
+                            <input type="text" id="makro-search-query" 
+                                placeholder="พิมพ์ชื่อสินค้า เช่น เลย์, มาม่า, โค้ก หรือรหัส Makro..." 
+                                class="w-full pl-8 pr-8 py-2 bg-white border border-rose-200 focus:border-rose-500 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-rose-200 transition placeholder-slate-400 shadow-inner"
+                                oninput="handleMakroSearchInput(this)"
+                                onkeydown="if(event.key==='Enter'){event.preventDefault();fetchFromMakroPro();}">
+                            <button type="button" onclick="clearMakroSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1" id="btn-clear-makro-search">
+                                <i class="fa-solid fa-circle-xmark text-sm"></i>
+                            </button>
+                        </div>
+                        <button type="button" onclick="fetchFromMakroPro()" id="btn-fetch-makro" 
+                            class="px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs rounded-xl transition shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+                            <i class="fa-solid fa-search" id="icon-fetch-search"></i>
+                            <i class="fa-solid fa-circle-notch fa-spin hidden" id="icon-fetch-loading"></i>
+                            <span>ค้นหา</span>
+                        </button>
+                    </div>
+
+                    <!-- Search Results Box: Card list of matching / similar products -->
+                    <div id="makro-search-results-box" class="hidden mt-2 bg-white rounded-xl border border-rose-200 shadow-md divide-y divide-slate-100 overflow-hidden text-xs max-h-72 overflow-y-auto custom-scrollbar">
+                    </div>
+                </div>
+
+                <!-- Product Name -->
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ชื่อสินค้าและขนาดบรรจุ <span class="text-rose-600">*</span></label>
+                    <input type="text" id="edit-prod-name" required placeholder="เช่น โค้ก รสออริจินัล 330 มล. x 24" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 text-xs sm:text-sm">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Category -->
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">หมวดหมู่ <span class="text-rose-600">*</span></label>
+                        <select id="edit-prod-category" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 text-xs sm:text-sm">
+                            <option value="ขนม">ขนม</option>
+                            <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+                            <option value="เครื่องปรุง-ทั่วไป">เครื่องปรุง-ทั่วไป</option>
+                        </select>
+                    </div>
+
+                    <!-- Unit -->
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">หน่วยที่สั่ง <span class="text-rose-600">*</span></label>
+                        <input type="text" id="edit-prod-unit" required placeholder="เช่น Pack, ลัง, ถาด" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 text-xs sm:text-sm">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Makro Code -->
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">รหัสสินค้า Makro</label>
+                        <input type="text" id="edit-prod-code" placeholder="เช่น 929370" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 font-mono text-xs sm:text-sm">
+                    </div>
+
+                    <!-- Barcode -->
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">บาร์โค้ด (Barcode)</label>
+                        <input type="text" id="edit-prod-barcode" placeholder="บาร์โค้ดยิงสแกน" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 font-mono text-xs sm:text-sm">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                    <!-- Wholesale Cost / EA -->
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ราคาส่ง/EA (฿) <span class="text-rose-600">*</span></label>
+                        <input type="number" step="0.01" min="0" id="edit-prod-cost" required placeholder="0.00" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 font-semibold text-rose-600 text-xs sm:text-sm">
+                    </div>
+
+                    <!-- Wholesale Cost / Unit -->
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ราคาส่ง/ชิ้น (฿)</label>
+                        <input type="number" step="0.01" min="0" id="edit-prod-unit-cost" placeholder="0.00" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 text-xs sm:text-sm">
+                    </div>
+
+                    <!-- Retail Price -->
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ราคาขาย (฿)</label>
+                        <input type="number" step="0.01" min="0" id="edit-prod-price" placeholder="0.00" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 text-xs sm:text-sm">
+                    </div>
+                </div>
+
+                <!-- Product Image Upload -->
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">รูปภาพสินค้า</label>
+                    <div class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                        <div class="w-14 h-14 rounded-lg bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center shadow-sm" id="edit-img-preview-box">
+                            <i class="fa-solid fa-image text-slate-300 text-2xl" id="edit-img-placeholder"></i>
+                            <img id="edit-img-preview" src="" class="hidden w-full h-full object-contain p-0.5">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <input type="file" id="edit-prod-file" accept="image/*" onchange="handleProductImageFile(this)" class="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100">
+                            <span class="text-[10px] text-slate-400 block mt-1">สามารถเลือกภาพจากเครื่อง หรือใช้ภาพที่ดึงจาก Makro Pro ได้</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Action Buttons -->
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeEditProductModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl transition">
+                        ยกเลิก
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition shadow-md">
+                        บันทึกสินค้า
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ACTION HISTORY & AUDIT LOGS MODAL -->
+    <div id="action-history-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeActionHistoryModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-full p-4 sm:p-5 max-h-[90vh] flex flex-col z-10">
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 shadow-sm">
+                        <i class="fa-solid fa-clock-rotate-left text-base"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 leading-tight">ประวัติการทำงานทั้งหมด</h3>
+                        <p class="text-[11px] text-slate-500">บันทึกทุกการกระทำ (เพิ่ม/แก้/ลบ/สั่งซื้อ) ซิงค์ลง GitHub อัตโนมัติ</p>
+                    </div>
+                </div>
+                <button onclick="closeActionHistoryModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Toolbar & Filter Tabs -->
+            <div class="py-2.5 flex items-center justify-between gap-2 border-b border-slate-100">
+                <div class="flex items-center gap-1 overflow-x-auto text-[11px] custom-scrollbar">
+                    <button type="button" onclick="filterActionHistory('all')" id="btn-filter-act-all" class="px-2.5 py-1 rounded-lg font-bold bg-indigo-600 text-white transition shadow-sm">ทั้งหมด</button>
+                    <button type="button" onclick="filterActionHistory('product')" id="btn-filter-act-product" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition">สินค้า</button>
+                    <button type="button" onclick="filterActionHistory('order')" id="btn-filter-act-order" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition">การสั่งซื้อ</button>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button type="button" onclick="syncPendingActionsToGitHub()" id="btn-sync-pending" class="px-2.5 py-1 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm" title="ซิงค์ข้อมูลกับ GitHub">
+                        <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+                        <span id="sync-pending-label">ซิงค์ Cloud</span>
+                    </button>
+                    <button type="button" onclick="openGitHubSettingsModal()" class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition" title="ตั้งค่า GitHub">
+                        <i class="fa-solid fa-gear text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timeline List -->
+            <div id="action-history-list" class="flex-1 overflow-y-auto custom-scrollbar py-2 divide-y divide-slate-100 text-xs sm:text-sm">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Footer -->
+            <div class="pt-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+                <span id="action-history-count" class="font-medium">รวม 0 รายการ</span>
+                <button type="button" onclick="clearLocalActionHistoryConfirm()" class="text-slate-400 hover:text-rose-600 transition text-[11px]">
+                    ล้างประวัติในเครื่อง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GITHUB & VERCEL SETTINGS MODAL -->
+    <div id="github-settings-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeGitHubSettingsModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 flex flex-col z-10 space-y-4">
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div class="flex items-center gap-2">
+                    <i class="fa-brands fa-github text-slate-900 text-xl"></i>
+                    <h3 class="text-base font-bold text-slate-900">ตั้งค่าเชื่อมต่อ GitHub & Vercel</h3>
+                </div>
+                <button onclick="closeGitHubSettingsModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Content Form -->
+            <div class="space-y-3 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">GitHub Repository (Owner/Repo)</label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="gh-owner-input" placeholder="boasnirut" class="w-1/2 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
+                        <span class="text-slate-400 font-bold">/</span>
+                        <input type="text" id="gh-repo-input" placeholder="order-np" class="w-1/2 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">
+                        GitHub Personal Access Token (PAT)
+                        <span class="text-[11px] font-normal text-slate-400 block sm:inline">(สำหรับ Commit ประวัติลง GitHub)</span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="gh-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full p-2 pr-9 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
+                        <button type="button" onclick="toggleTokenVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-eye text-xs" id="icon-toggle-token"></i>
+                        </button>
+                    </div>
+                    <p class="mt-1 text-[11px] text-slate-500">
+                        สร้าง Token ได้ฟรีที่ <a href="https://github.com/settings/tokens" target="_blank" class="text-sky-600 underline font-medium">GitHub Settings &rarr; Tokens</a> (เลือกสิทธิ์ repo)
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ชื่อผู้ดำเนินการ (User Name)</label>
+                    <input type="text" id="gh-user-input" placeholder="ครูนฤทธิ์" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-slate-800">
+                </div>
+
+                <!-- Status alert -->
+                <div id="gh-test-status" class="hidden p-2.5 rounded-xl text-xs"></div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="pt-2 border-t border-slate-200 flex items-center justify-between gap-2">
+                <button type="button" onclick="testGitHubConnection()" id="btn-test-gh" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-vial"></i>
+                    <span>ทดสอบเชื่อมต่อ</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="closeGitHubSettingsModal()" class="px-3 py-2 text-slate-500 hover:text-slate-800 font-medium text-xs">ยกเลิก</button>
+                    <button type="button" onclick="saveGitHubSettings()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl transition shadow-sm">
+                        บันทึกการตั้งค่า
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONLINE CAPABILITY & CLOUD BACKUP MODAL (NEW REQUIREMENT) -->
+    <div id="online-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeCloudModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-5 max-h-[90vh] flex flex-col z-10">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-globe text-sky-600 text-lg"></i>
+                    <h3 class="text-base font-bold text-slate-900">ใช้งานแบบออนไลน์ & ซิงค์ข้อมูล</h3>
+                </div>
+                <button onclick="closeCloudModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="py-3 space-y-4 text-xs sm:text-sm overflow-y-auto custom-scrollbar">
+                
+                <!-- Share Cart Via URL Link -->
+                <div class="p-3.5 bg-gradient-to-r from-sky-50 to-indigo-50 border border-sky-200 rounded-xl space-y-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-share-nodes text-sky-600 text-base"></i>
+                        <span class="font-bold text-slate-900">แชร์รายการที่สั่งผ่านลิงก์ (Share via URL)</span>
+                    </div>
+                    <p class="text-xs text-slate-600">
+                        สร้างลิงก์สำหรับส่งต่อในกลุ่ม LINE คุณครูท่านอื่นกดเปิดลิงก์นี้แล้วจะมีรายการสินค้าในตะกร้าตรงกันทันที!
+                    </p>
+                    <button onclick="generateShareableOrderLink()" class="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-link"></i>
+                        <span>คัดลอกลิงก์แชร์รายการสั่งซื้อ</span>
+                    </button>
+                </div>
+
+                <!-- Backup & Restore Database -->
+                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5">
+                    <span class="font-bold text-slate-900 block">สำรองและถ่ายโอนข้อมูลข้ามเครื่อง (Backup & Restore)</span>
+                    <p class="text-xs text-slate-500">
+                        ถ่ายโอนข้อมูลสินค้าที่แก้ไข และประวัติการสั่งซื้อ ไปยังโทรศัพท์มือถือหรือคอมพิวเตอร์เครื่องอื่น
+                    </p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="exportFullBackupJSON()" class="py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-download text-xs"></i>
+                            <span>ส่งออกไฟล์สำรอง</span>
+                        </button>
+                        <label class="py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-upload text-xs"></i>
+                            <span>นำเข้าไฟล์สำรอง</span>
+                            <input type="file" accept=".json" onchange="importFullBackupJSON(this)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Online Deployment Guide -->
+                <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1.5">
+                    <div class="flex items-center gap-1.5 text-emerald-900 font-bold">
+                        <i class="fa-solid fa-cloud text-emerald-600"></i>
+                        <span>วิธีนำขึ้นออนไลน์ฟรีตลอดชีพ (เข้าใช้งานได้จากทุกที่)</span>
+                    </div>
+                    <ul class="list-disc list-inside space-y-1 text-xs text-emerald-800 leading-relaxed">
+                        <li><strong>วิธีที่ 1 (ง่ายสุดใน 30 วิ)</strong>: เข้าเว็บ <strong>app.netlify.com/drop</strong> แล้วลากไฟล์ <code>สั่งของMakro.html</code> ไปวาง จะได้ลิงก์ออนไลน์ฟรีทันที</li>
+                        <li><strong>วิธีที่ 2</strong>: อัปโหลดขึ้น <strong>GitHub Pages</strong> หรือ <strong>Cloudflare Pages</strong> ฟรีตลอดชีพ</li>
+                        <li>เนื่องจากโปรแกรมรวมฐานข้อมูลและรูปภาพไว้ในไฟล์เดียว จึงนำขึ้นออนไลน์ได้ทันทีโดยไม่ต้องตั้งค่าเซิร์ฟเวอร์ใดๆ ครับ</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end">
+                <button onclick="closeCloudModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl transition">
+                    ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTORY & PAST ORDERS MODAL -->
+    <div id="history-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeHistoryModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 max-h-[85vh] flex flex-col z-10">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-slate-700 text-lg"></i>
+                    <h3 class="text-base font-bold text-slate-900">ประวัติการสั่งซื้อที่บันทึกไว้</h3>
+                </div>
+                <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto py-3 space-y-3 custom-scrollbar" id="history-list">
+                <!-- History cards generated dynamically -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end">
+                <button onclick="closeHistoryModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl transition">
+                    ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PWA INSTALL GUIDE MODAL -->
+    <div id="pwa-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closePwaModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 z-10">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-mobile-screen-button text-rose-600 text-lg"></i>
+                    <h3 class="text-base font-bold text-slate-900">ติดตั้งแอปลงโทรศัพท์มือถือ</h3>
+                </div>
+                <button onclick="closePwaModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <div class="py-4 space-y-3.5 text-xs sm:text-sm">
+                <!-- Android Guide -->
+                <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1.5">
+                    <div class="flex items-center gap-2 text-emerald-900 font-bold">
+                        <i class="fa-brands fa-android text-base text-emerald-600"></i>
+                        <span>สำหรับมือถือ Android (Samsung, OPPO, Vivo, Xiaomi)</span>
+                    </div>
+                    <ol class="list-decimal list-inside text-xs text-emerald-800 space-y-1 pl-1">
+                        <li>เปิดเว็บนี้ด้วย <strong>Google Chrome</strong> บนมือถือ</li>
+                        <li>กดปุ่ม <strong>จุด 3 จุด (⋮)</strong> ที่มุมบนขวา</li>
+                        <li>เลือก <strong>"ติดตั้งแอป" (Install app)</strong> หรือ <strong>"เพิ่มลงในหน้าจอหลัก"</strong></li>
+                        <li>จะมีไอคอนแอป <strong>"Order NP"</strong> ปรากฏบนหน้าจอมือถือทันที!</li>
+                    </ol>
+                </div>
+
+                <!-- iOS iPhone Guide -->
+                <div class="p-3.5 bg-sky-50 border border-sky-200 rounded-xl space-y-1.5">
+                    <div class="flex items-center gap-2 text-sky-900 font-bold">
+                        <i class="fa-brands fa-apple text-base text-sky-600"></i>
+                        <span>สำหรับ iPhone / iPad</span>
+                    </div>
+                    <ol class="list-decimal list-inside text-xs text-sky-800 space-y-1 pl-1">
+                        <li>เปิดเว็บนี้ด้วย <strong>Safari</strong> บน iPhone</li>
+                        <li>กดปุ่ม <strong>แชร์</strong> (ไอคอนสี่เหลี่ยมลูกศรชี้ขึ้น ⎋ ด้านล่าง)</li>
+                        <li>เลื่อนลงมาเลือก <strong>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen)</strong></li>
+                        <li>กด <strong>"เพิ่ม" (Add)</strong> จะได้แอปสั่งของบนหน้าจอไอโฟนทันที!</li>
+                    </ol>
+                </div>
+
+                <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
+                    <span>เมื่อติดตั้งแล้วจะเปิดใช้งานได้เต็มจอ ไม่มีแถบเบราว์เซอร์กวนใจ ใช้งานออฟไลน์ได้ 100%</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-3 border-t border-slate-100">
+                <button onclick="closePwaModal()" class="px-5 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-xl transition">
+                    เข้าใจแล้ว
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRINT AREA CONTAINER (Used during window.print() and html2canvas) -->
+    <div id="print-area" class="hidden"></div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-4 right-4 z-50 transform translate-y-[-150%] opacity-0 pointer-events-none transition-all duration-300 no-print">
+        <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs sm:text-sm font-medium border border-slate-700">
+            <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+            <span id="toast-msg">ข้อความแจ้งเตือน</span>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        const DEFAULT_MAKRO_PRODUCTS = __MAKRO_PRODUCTS_JSON__;
+
+        // Application State
+        const state = {
+            products: [],
+            cart: {}, // id: qty
+            category: 'all',
+            searchQuery: '',
+            viewMode: 'grid', // 'grid' or 'table'
+            history: [],
+            printFilter: 'all',
+            printWithImages: true,
+            printWithPrices: true // NEW: Toggle show/hide prices
+        };
+
+        // Temporary base64 for product edit form image
+        let currentEditingImageBase64 = '';
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProductsFromStorage();
+            loadCartFromStorage();
+            loadHistoryFromStorage();
+            loadActivityLogs();
+            updateSyncBadge();
+            checkUrlForSharedOrder();
+            updateCategoryCounts();
+            renderCatalog();
+            updateSummaryUI();
+            registerServiceWorker();
+            setTimeout(() => checkCloudUpdates(), 1200);
+        });
+
+        // PWA Service Worker & Install Logic
+        let deferredInstallPrompt = null;
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js').catch(() => {});
+                });
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                const btn = document.getElementById('btn-install-pwa');
+                if (btn) {
+                    btn.classList.remove('hidden');
+                    btn.classList.add('animate-pulse');
+                }
+            });
+
+            window.addEventListener('appinstalled', () => {
+                deferredInstallPrompt = null;
+                showToast('ติดตั้งแอป Order NP สำเร็จแล้ว!', 'success');
+            });
+        }
+
+        function triggerPwaInstall() {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                deferredInstallPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') {
+                        showToast('กำลังติดตั้งแอปลงมือถือ...', 'success');
+                    }
+                    deferredInstallPrompt = null;
+                });
+            } else {
+                openPwaModal();
+            }
+        }
+
+        function openPwaModal() {
+            document.getElementById('pwa-modal').classList.remove('hidden');
+        }
+
+        function closePwaModal() {
+            document.getElementById('pwa-modal').classList.add('hidden');
+        }
+
+
+        // Products Storage & CRUD
+        function loadProductsFromStorage() {
+            try {
+                const saved = localStorage.getItem('coop_makro_custom_catalog');
+                if (saved) {
+                    state.products = JSON.parse(saved);
+                } else {
+                    state.products = [...DEFAULT_MAKRO_PRODUCTS];
+                }
+            } catch (e) {
+                state.products = [...DEFAULT_MAKRO_PRODUCTS];
+            }
+        }
+
+        function saveProductsToStorage() {
+            try {
+                localStorage.setItem('coop_makro_custom_catalog', JSON.stringify(state.products));
+            } catch (e) {}
+            updateCategoryCounts();
+        }
+
+        function resetProductsToDefaultConfirm() {
+            if (confirm('คุณต้องการคืนค่ารายการสินค้าทั้งหมดกลับเป็นข้อมูลเริ่มต้นของโรงเรียน ใช่หรือไม่?')) {
+                state.products = JSON.parse(JSON.stringify(DEFAULT_MAKRO_PRODUCTS));
+                saveProductsToStorage();
+                recordAction('reset_catalog', 'คืนค่ารายการสินค้าเริ่มต้น', 'คืนค่ารายการสินค้าทั้งหมดกลับเป็นค่าเริ่มต้นโรงเรียน', {}, state.products);
+                renderCatalog();
+                renderMgmtTable();
+                updateSummaryUI();
+                showToast('คืนค่ารายการสินค้าเริ่มต้นเรียบร้อยแล้ว', 'success');
+            }
+        }
+
+        function updateCategoryCounts() {
+            const countAll = state.products.length;
+            const countSnack = state.products.filter(p => p.category === 'ขนม').length;
+            const countDrink = state.products.filter(p => p.category === 'เครื่องดื่ม').length;
+            const countCond = state.products.filter(p => p.category === 'เครื่องปรุง-ทั่วไป').length;
+
+            const elAll = document.getElementById('cat-count-all');
+            const elSnack = document.getElementById('cat-count-ขนม');
+            const elDrink = document.getElementById('cat-count-เครื่องดื่ม');
+            const elCond = document.getElementById('cat-count-เครื่องปรุง-ทั่วไป');
+
+            if (elAll) elAll.textContent = `(${countAll})`;
+            if (elSnack) elSnack.textContent = `(${countSnack})`;
+            if (elDrink) elDrink.textContent = `(${countDrink})`;
+            if (elCond) elCond.textContent = `(${countCond})`;
+        }
+
+        // Cart Storage helpers
+        function loadCartFromStorage() {
+            try {
+                const saved = localStorage.getItem('coop_makro_cart');
+                if (saved) state.cart = JSON.parse(saved);
+            } catch (e) {
+                state.cart = {};
+            }
+        }
+
+        function saveCartToStorage() {
+            try {
+                localStorage.setItem('coop_makro_cart', JSON.stringify(state.cart));
+            } catch (e) {}
+        }
+
+        function loadHistoryFromStorage() {
+            try {
+                const saved = localStorage.getItem('coop_makro_history');
+                if (saved) state.history = JSON.parse(saved);
+            } catch (e) {
+                state.history = [];
+            }
+        }
+
+        function saveHistoryToStorage() {
+            try {
+                localStorage.setItem('coop_makro_history', JSON.stringify(state.history));
+            } catch (e) {}
+        }
+
+        // =================================================================
+        // --- ACTION LOGGING & GITHUB CLOUD SYNC ENGINE (Order NP) ---
+        // =================================================================
+        state.activityLogs = [];
+        state.activityFilter = 'all';
+
+        function getGitHubConfig() {
+            return {
+                token: localStorage.getItem('coop_makro_gh_token') || '',
+                owner: localStorage.getItem('coop_makro_gh_owner') || 'boasnirut',
+                repo: localStorage.getItem('coop_makro_gh_repo') || 'order-np',
+                user: localStorage.getItem('coop_makro_gh_user') || 'ครูนฤทธิ์'
+            };
+        }
+
+        function loadActivityLogs() {
+            try {
+                const saved = localStorage.getItem('coop_makro_activity_logs');
+                if (saved) {
+                    state.activityLogs = JSON.parse(saved);
+                } else {
+                    state.activityLogs = [];
+                }
+            } catch (e) {
+                state.activityLogs = [];
+            }
+        }
+
+        function saveActivityLogsToStorage() {
+            try {
+                localStorage.setItem('coop_makro_activity_logs', JSON.stringify(state.activityLogs));
+            } catch (e) {}
+        }
+
+        // Record any action to local history and sync to GitHub / Vercel
+        async function recordAction(actionType, title, details, actionData = {}, updatedProducts = null) {
+            const config = getGitHubConfig();
+            const timestamp = new Date().toISOString();
+            const actionId = `act-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+
+            const logEntry = {
+                id: actionId,
+                timestamp: timestamp,
+                type: actionType,
+                title: title,
+                details: details,
+                user: config.user,
+                data: actionData,
+                synced: false
+            };
+
+            // Prepend to local activity logs
+            state.activityLogs.unshift(logEntry);
+            if (state.activityLogs.length > 500) state.activityLogs = state.activityLogs.slice(0, 500);
+            saveActivityLogsToStorage();
+
+            // Try to sync to cloud asynchronously via Vercel Serverless Function or GitHub REST API
+            syncActionEntryToCloud(logEntry, updatedProducts);
+
+            return logEntry;
+        }
+
+        async function syncActionEntryToCloud(logEntry, updatedProducts = null) {
+            const config = getGitHubConfig();
+            const payload = {
+                action: logEntry.type,
+                title: logEntry.title,
+                details: logEntry.details,
+                data: logEntry.data,
+                user: config.user,
+                products: updatedProducts,
+                githubToken: config.token,
+                githubOwner: config.owner,
+                githubRepo: config.repo
+            };
+
+            try {
+                const res = await fetch('/api/record-action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-github-token': config.token,
+                        'x-github-owner': config.owner,
+                        'x-github-repo': config.repo
+                    },
+                    body: JSON.stringify(payload),
+                    signal: AbortSignal.timeout(10000)
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.success && data.syncedToGitHub) {
+                        logEntry.synced = true;
+                        logEntry.commitUrl = data.commitUrl || '';
+                        saveActivityLogsToStorage();
+                        updateSyncBadge();
+                        return;
+                    }
+                }
+            } catch (e) {
+                // If Vercel API not reachable or offline, keep as unsynced
+            }
+
+            // Direct GitHub API fallback if client has Token configured in settings
+            if (config.token && config.owner && config.repo) {
+                try {
+                    await directGitHubSync(logEntry, updatedProducts, config);
+                } catch(e) {}
+            }
+
+            updateSyncBadge();
+        }
+
+        // Direct GitHub REST API Commit (Client-Side Fallback)
+        async function directGitHubSync(logEntry, updatedProducts, config) {
+            const ghHeaders = {
+                'Authorization': `Bearer ${config.token}`,
+                'Accept': 'application/vnd.github+json',
+                'User-Agent': 'OrderNP-PWA',
+                'X-GitHub-Api-Version': '2022-11-28'
+            };
+
+            // 1. Commit updated activity_logs.json
+            try {
+                const getLogsUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/activity_logs.json`;
+                let logsSha = null;
+                const getResp = await fetch(getLogsUrl, { headers: ghHeaders });
+                if (getResp.ok) {
+                    const json = await getResp.json();
+                    logsSha = json.sha;
+                }
+
+                const putLogsUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/activity_logs.json`;
+                const contentB64 = btoa(unescape(encodeURIComponent(JSON.stringify(state.activityLogs.slice(0, 300), null, 2))));
+                const putResp = await fetch(putLogsUrl, {
+                    method: 'PUT',
+                    headers: ghHeaders,
+                    body: JSON.stringify({
+                        message: `log: [${logEntry.type}] ${logEntry.title}`,
+                        content: contentB64,
+                        sha: logsSha || undefined
+                    })
+                });
+
+                if (putResp.ok) {
+                    const resJson = await putResp.json();
+                    logEntry.synced = true;
+                    logEntry.commitUrl = resJson?.commit?.html_url || '';
+                    saveActivityLogsToStorage();
+                }
+            } catch(e) {}
+
+            // 2. Commit updated makro_products.json if provided
+            if (Array.isArray(updatedProducts) && updatedProducts.length > 0) {
+                try {
+                    const getProdUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/makro_products.json`;
+                    let prodSha = null;
+                    const getProdResp = await fetch(getProdUrl, { headers: ghHeaders });
+                    if (getProdResp.ok) {
+                        const json = await getProdResp.json();
+                        prodSha = json.sha;
+                    }
+
+                    const putProdUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/makro_products.json`;
+                    const prodB64 = btoa(unescape(encodeURIComponent(JSON.stringify(updatedProducts, null, 2))));
+                    await fetch(putProdUrl, {
+                        method: 'PUT',
+                        headers: ghHeaders,
+                        body: JSON.stringify({
+                            message: `catalog: อัปเดตรายการสินค้า (${logEntry.title})`,
+                            content: prodB64,
+                            sha: prodSha || undefined
+                        })
+                    });
+                } catch(e) {}
+            }
+        }
+
+        // Sync all unsynced logs to GitHub
+        async function syncPendingActionsToGitHub() {
+            const btn = document.getElementById('btn-sync-pending');
+            const label = document.getElementById('sync-pending-label');
+            if (label) label.textContent = 'กำลังซิงค์...';
+            if (btn) btn.disabled = true;
+
+            const config = getGitHubConfig();
+            const unsynced = state.activityLogs.filter(l => !l.synced);
+
+            if (unsynced.length === 0) {
+                showToast('ข้อมูลทั้งหมดซิงค์กับ GitHub เรียบร้อยแล้ว', 'info');
+                if (label) label.textContent = 'ซิงค์ Cloud';
+                if (btn) btn.disabled = false;
+                return;
+            }
+
+            showToast(`กำลังส่งข้อมูล ${unsynced.length} รายการขึ้น GitHub...`, 'info');
+
+            // Send sync with full updated catalog
+            try {
+                const res = await fetch('/api/record-action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-github-token': config.token,
+                        'x-github-owner': config.owner,
+                        'x-github-repo': config.repo
+                    },
+                    body: JSON.stringify({
+                        action: 'batch_sync',
+                        title: `ซิงค์ประวัติและสินค้า ${unsynced.length} รายการ`,
+                        details: 'ซิงค์จากโทรศัพท์/เครื่องผู้ใช้งาน',
+                        products: state.products,
+                        githubToken: config.token,
+                        githubOwner: config.owner,
+                        githubRepo: config.repo
+                    }),
+                    signal: AbortSignal.timeout(15000)
+                });
+
+                if (res.ok) {
+                    unsynced.forEach(l => l.synced = true);
+                    saveActivityLogsToStorage();
+                    renderActionHistory();
+                    showToast('ซิงค์ข้อมูลกับ GitHub สำเร็จเรียบร้อย!', 'success');
+                } else {
+                    throw new Error('Server returned ' + res.status);
+                }
+            } catch (err) {
+                // Fallback to client-side direct sync if token exists
+                if (config.token) {
+                    try {
+                        await directGitHubSync({ type: 'batch_sync', title: 'ซิงค์ประวัติ' }, state.products, config);
+                        unsynced.forEach(l => l.synced = true);
+                        saveActivityLogsToStorage();
+                        renderActionHistory();
+                        showToast('ซิงค์ข้อมูลตรงเข้า GitHub สำเร็จเรียบร้อย!', 'success');
+                    } catch(e2) {
+                        showToast('ไม่สามารถซิงค์ได้: ' + e2.message, 'error');
+                    }
+                } else {
+                    showToast('ยังไม่ได้ระบุ GitHub Token กรุณากดตั้งค่าเพื่อเชื่อมต่อ', 'warning');
+                    openGitHubSettingsModal();
+                }
+            } finally {
+                if (label) label.textContent = 'ซิงค์ Cloud';
+                if (btn) btn.disabled = false;
+                updateSyncBadge();
+            }
+        }
+
+        function updateSyncBadge() {
+            const unsyncedCount = state.activityLogs.filter(l => !l.synced).length;
+            const label = document.getElementById('sync-pending-label');
+            if (label) {
+                if (unsyncedCount > 0) {
+                    label.textContent = `รอซิงค์ (${unsyncedCount})`;
+                } else {
+                    label.textContent = 'ซิงค์แล้ว ✓';
+                }
+            }
+        }
+
+        // --- Action History UI ---
+        function openActionHistoryModal() {
+            loadActivityLogs();
+            renderActionHistory();
+            document.getElementById('action-history-modal').classList.remove('hidden');
+        }
+
+        function closeActionHistoryModal() {
+            document.getElementById('action-history-modal').classList.add('hidden');
+        }
+
+        function filterActionHistory(filter) {
+            state.activityFilter = filter;
+            ['all', 'product', 'order'].forEach(f => {
+                const btn = document.getElementById(`btn-filter-act-${f}`);
+                if (btn) {
+                    if (f === filter) {
+                        btn.className = 'px-2.5 py-1 rounded-lg font-bold bg-indigo-600 text-white transition shadow-sm';
+                    } else {
+                        btn.className = 'px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition';
+                    }
+                }
+            });
+            renderActionHistory();
+        }
+
+        function renderActionHistory() {
+            const listEl = document.getElementById('action-history-list');
+            const countEl = document.getElementById('action-history-count');
+            if (!listEl) return;
+
+            let filtered = state.activityLogs || [];
+            if (state.activityFilter === 'product') {
+                filtered = filtered.filter(l => ['add_product', 'edit_product', 'delete_product', 'reset_catalog'].includes(l.type));
+            } else if (state.activityFilter === 'order') {
+                filtered = filtered.filter(l => ['create_order', 'order'].includes(l.type));
+            }
+
+            if (countEl) countEl.textContent = `รวม ${filtered.length} รายการ`;
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `
+                    <div class="py-12 text-center text-slate-400 space-y-2">
+                        <i class="fa-solid fa-clock-rotate-left text-3xl text-slate-300"></i>
+                        <p class="font-medium text-slate-600">ยังไม่มีประวัติการทำงาน</p>
+                        <p class="text-[11px] text-slate-400">เมื่อมีการเพิ่มสินค้า แก้ไข หรือสั่งซื้อ ระบบจะบันทึกประวัติที่นี่โดยอัตโนมัติ</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(log => {
+                let iconClass = 'fa-solid fa-circle-info text-slate-500 bg-slate-100';
+                let typeBadge = '<span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">ทั่วไป</span>';
+
+                if (log.type === 'add_product') {
+                    iconClass = 'fa-solid fa-plus text-emerald-600 bg-emerald-50 border border-emerald-200';
+                    typeBadge = '<span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">เพิ่มสินค้า</span>';
+                } else if (log.type === 'edit_product') {
+                    iconClass = 'fa-solid fa-pen-to-square text-sky-600 bg-sky-50 border border-sky-200';
+                    typeBadge = '<span class="px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 font-bold">แก้ไขสินค้า</span>';
+                } else if (log.type === 'delete_product') {
+                    iconClass = 'fa-solid fa-trash-can text-rose-600 bg-rose-50 border border-rose-200';
+                    typeBadge = '<span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-800 font-bold">ลบสินค้า</span>';
+                } else if (log.type === 'create_order' || log.type === 'order') {
+                    iconClass = 'fa-solid fa-cart-shopping text-amber-600 bg-amber-50 border border-amber-200';
+                    typeBadge = '<span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">สั่งซื้อ</span>';
+                } else if (log.type === 'reset_catalog') {
+                    iconClass = 'fa-solid fa-rotate-left text-purple-600 bg-purple-50 border border-purple-200';
+                    typeBadge = '<span class="px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-bold">คืนค่า</span>';
+                }
+
+                // Format Thai date/time
+                let formattedTime = '';
+                try {
+                    const d = new Date(log.timestamp);
+                    formattedTime = d.toLocaleDateString('th-TH', {
+                        year: '2-digit', month: 'short', day: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+                } catch(e) {
+                    formattedTime = log.timestamp;
+                }
+
+                const syncBadge = log.synced 
+                    ? '<span class="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200" title="ซิงค์ขึ้น GitHub สำเร็จ"><i class="fa-solid fa-cloud-check"></i> GitHub ✓</span>'
+                    : '<span class="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200" title="บันทึกในเครื่อง (รอซิงค์)"><i class="fa-solid fa-mobile-screen"></i> ในเครื่อง</span>';
+
+                return `
+                    <div class="py-2.5 px-2 hover:bg-slate-50/80 rounded-xl transition flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${iconClass}">
+                            <i class="${iconClass.split(' ')[0]} ${iconClass.split(' ')[1]} text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-wrap items-center gap-1.5 mb-0.5">
+                                ${typeBadge}
+                                <span class="font-bold text-slate-900 text-xs sm:text-sm truncate">${escapeHtml(log.title)}</span>
+                            </div>
+                            <p class="text-slate-600 text-[11px] leading-relaxed break-words">${escapeHtml(log.details || '')}</p>
+                            <div class="flex items-center gap-2 mt-1 text-[10px] text-slate-400">
+                                <span><i class="fa-regular fa-clock mr-1"></i>${formattedTime}</span>
+                                <span>•</span>
+                                <span><i class="fa-regular fa-user mr-1"></i>${escapeHtml(log.user || 'ครูนฤทธิ์')}</span>
+                                <span class="ml-auto">${syncBadge}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearLocalActionHistoryConfirm() {
+            if (confirm('คุณต้องการล้างประวัติการทำงานในเครื่อง ใช่หรือไม่? (ข้อมูลบน GitHub จะยังคงอยู่)')) {
+                state.activityLogs = [];
+                saveActivityLogsToStorage();
+                renderActionHistory();
+                showToast('ล้างประวัติการทำงานในเครื่องเรียบร้อยแล้ว', 'info');
+            }
+        }
+
+        // --- GitHub Settings Modal Logic ---
+        function openGitHubSettingsModal() {
+            const config = getGitHubConfig();
+            document.getElementById('gh-owner-input').value = config.owner;
+            document.getElementById('gh-repo-input').value = config.repo;
+            document.getElementById('gh-token-input').value = config.token;
+            document.getElementById('gh-user-input').value = config.user;
+            const statusEl = document.getElementById('gh-test-status');
+            if (statusEl) statusEl.classList.add('hidden');
+            document.getElementById('github-settings-modal').classList.remove('hidden');
+        }
+
+        function closeGitHubSettingsModal() {
+            document.getElementById('github-settings-modal').classList.add('hidden');
+        }
+
+        function toggleTokenVisibility() {
+            const input = document.getElementById('gh-token-input');
+            const icon = document.getElementById('icon-toggle-token');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash text-xs';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye text-xs';
+            }
+        }
+
+        function saveGitHubSettings() {
+            const owner = document.getElementById('gh-owner-input').value.trim() || 'boasnirut';
+            const repo = document.getElementById('gh-repo-input').value.trim() || 'order-np';
+            const token = document.getElementById('gh-token-input').value.trim();
+            const user = document.getElementById('gh-user-input').value.trim() || 'ครูนฤทธิ์';
+
+            localStorage.setItem('coop_makro_gh_owner', owner);
+            localStorage.setItem('coop_makro_gh_repo', repo);
+            localStorage.setItem('coop_makro_gh_token', token);
+            localStorage.setItem('coop_makro_gh_user', user);
+
+            showToast('บันทึกการตั้งค่า GitHub เรียบร้อยแล้ว', 'success');
+            closeGitHubSettingsModal();
+            updateSyncBadge();
+
+            // Try auto sync if token provided
+            if (token) {
+                syncPendingActionsToGitHub();
+            }
+        }
+
+        async function testGitHubConnection() {
+            const owner = document.getElementById('gh-owner-input').value.trim();
+            const repo = document.getElementById('gh-repo-input').value.trim();
+            const token = document.getElementById('gh-token-input').value.trim();
+            const statusEl = document.getElementById('gh-test-status');
+            const btnTest = document.getElementById('btn-test-gh');
+
+            if (!token) {
+                statusEl.className = 'p-2.5 rounded-xl text-xs bg-amber-50 border border-amber-200 text-amber-800';
+                statusEl.innerHTML = '⚠️ กรุณาระบุ GitHub Token ก่อนทดสอบการเชื่อมต่อ';
+                statusEl.classList.remove('hidden');
+                return;
+            }
+
+            statusEl.className = 'p-2.5 rounded-xl text-xs bg-slate-100 text-slate-700';
+            statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> กำลังตรวจสอบการเชื่อมต่อไปยัง GitHub...';
+            statusEl.classList.remove('hidden');
+            if (btnTest) btnTest.disabled = true;
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github+json'
+                    }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    statusEl.className = 'p-2.5 rounded-xl text-xs bg-emerald-50 border border-emerald-200 text-emerald-800';
+                    statusEl.innerHTML = `✅ เชื่อมต่อ GitHub สำเร็จ! พบ Repository <b>${data.full_name}</b> (สิทธิ์การเข้าถึงสมบูรณ์)`;
+                } else if (res.status === 404) {
+                    statusEl.className = 'p-2.5 rounded-xl text-xs bg-amber-50 border border-amber-200 text-amber-800';
+                    statusEl.innerHTML = `⚠️ เชื่อมต่อได้ แต่ยังไม่พบ Repository <b>${owner}/${repo}</b> (กรุณากดสร้าง Repository บน GitHub ก่อน)`;
+                } else {
+                    const err = await res.json();
+                    statusEl.className = 'p-2.5 rounded-xl text-xs bg-rose-50 border border-rose-200 text-rose-800';
+                    statusEl.innerHTML = `❌ การเชื่อมต่อไม่ผ่าน: ${err.message || res.statusText}`;
+                }
+            } catch(e) {
+                statusEl.className = 'p-2.5 rounded-xl text-xs bg-rose-50 border border-rose-200 text-rose-800';
+                statusEl.innerHTML = `❌ ไม่สามารถเชื่อมต่อได้: ${e.message}`;
+            } finally {
+                if (btnTest) btnTest.disabled = false;
+            }
+        }
+
+        // Check for latest catalog updates from cloud
+        async function checkCloudUpdates() {
+            try {
+                const config = getGitHubConfig();
+                const res = await fetch('/api/get-data?type=all', {
+                    headers: {
+                        'x-github-token': config.token,
+                        'x-github-owner': config.owner,
+                        'x-github-repo': config.repo
+                    },
+                    signal: AbortSignal.timeout(6000)
+                });
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json && json.success && json.data) {
+                        if (Array.isArray(json.data.catalog) && json.data.catalog.length > 0) {
+                            // Merge/update if cloud has items
+                            const localCatalog = localStorage.getItem('coop_makro_custom_catalog');
+                            if (!localCatalog) {
+                                state.products = json.data.catalog;
+                                saveProductsToStorage();
+                                renderCatalog();
+                                renderMgmtTable();
+                                updateSummaryUI();
+                            }
+                        }
+                        if (Array.isArray(json.data.logs) && json.data.logs.length > 0) {
+                            // Merge logs
+                            const existingIds = new Set(state.activityLogs.map(l => l.id));
+                            json.data.logs.forEach(l => {
+                                if (!existingIds.has(l.id)) {
+                                    l.synced = true;
+                                    state.activityLogs.push(l);
+                                }
+                            });
+                            state.activityLogs.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                            saveActivityLogsToStorage();
+                        }
+                    }
+                }
+            } catch(e) {}
+        }
+
+
+        // URL Shared Order Support (Online capability)
+        function checkUrlForSharedOrder() {
+            try {
+                const hash = window.location.hash;
+                if (hash && hash.startsWith('#order=')) {
+                    const encoded = hash.substring(7);
+                    const decoded = decodeURIComponent(atob(encoded));
+                    const orderObj = JSON.parse(decoded);
+                    if (orderObj && typeof orderObj === 'object') {
+                        state.cart = orderObj;
+                        saveCartToStorage();
+                        showToast('โหลดรายการสั่งซื้อที่แชร์ผ่านลิงก์เรียบร้อยแล้ว', 'success');
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function generateShareableOrderLink() {
+            const orderedItems = state.products.filter(p => state.cart[p.id] > 0);
+            if (orderedItems.length === 0) {
+                showToast('ยังไม่มีรายการที่เลือกสั่ง กรุณาเลือกสินค้าก่อนสร้างลิงก์', 'info');
+                return;
+            }
+
+            try {
+                const dataStr = btoa(encodeURIComponent(JSON.stringify(state.cart)));
+                const shareUrl = window.location.origin + window.location.pathname + '#order=' + dataStr;
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showToast('คัดลอกลิงก์สำหรับแชร์รายการสั่งซื้อเรียบร้อยแล้ว!', 'success');
+                }).catch(() => {
+                    prompt('คัดลอกลิงก์ด้านล่างนี้ได้เลยครับ:', shareUrl);
+                });
+            } catch (e) {
+                showToast('ไม่สามารถสร้างลิงก์แชร์ได้: ' + e.message, 'error');
+            }
+        }
+
+        // Export/Import Full Backup JSON
+        function exportFullBackupJSON() {
+            try {
+                const backup = {
+                    version: '2.0',
+                    exportedAt: new Date().toISOString(),
+                    customProducts: state.products,
+                    cart: state.cart,
+                    history: state.history
+                };
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `สำรองข้อมูล_สั่งของMakro_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('ส่งออกไฟล์สำรองข้อมูลเรียบร้อยแล้ว', 'success');
+            } catch (e) {
+                showToast('เกิดข้อผิดพลาดในการสำรองข้อมูล: ' + e.message, 'error');
+            }
+        }
+
+        function importFullBackupJSON(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    if (backup.customProducts && Array.isArray(backup.customProducts)) {
+                        state.products = backup.customProducts;
+                        saveProductsToStorage();
+                    }
+                    if (backup.cart) {
+                        state.cart = backup.cart;
+                        saveCartToStorage();
+                    }
+                    if (backup.history && Array.isArray(backup.history)) {
+                        state.history = backup.history;
+                        saveHistoryToStorage();
+                    }
+                    renderCatalog();
+                    updateSummaryUI();
+                    closeCloudModal();
+                    showToast('นำเข้าข้อมูลสำรองเรียบร้อยแล้ว!', 'success');
+                } catch (err) {
+                    showToast('ไฟล์สำรองไม่ถูกต้อง: ' + err.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Quantity Mutation
+        function setQuantity(id, qty) {
+            qty = Math.max(0, parseInt(qty) || 0);
+            if (qty === 0) {
+                delete state.cart[id];
+            } else {
+                state.cart[id] = qty;
+            }
+            saveCartToStorage();
+            updateProductUI(id);
+            updateSummaryUI();
+        }
+
+        function addQuantity(id, delta) {
+            const cur = state.cart[id] || 0;
+            setQuantity(id, cur + delta);
+        }
+
+        function clearCartConfirm() {
+            const count = Object.keys(state.cart).length;
+            if (count === 0) {
+                showToast('ยังไม่มีรายการที่เลือกสั่งในขณะนี้', 'info');
+                return;
+            }
+            if (confirm('คุณต้องการล้างรายการสินค้าที่เลือกสั่งทั้งหมด ' + count + ' รายการ ใช่หรือไม่?')) {
+                state.cart = {};
+                saveCartToStorage();
+                renderCatalog();
+                updateSummaryUI();
+                showToast('ล้างรายการสั่งซื้อเรียบร้อยแล้ว', 'success');
+            }
+        }
+
+        // Category Filter
+        function setCategory(cat) {
+            state.category = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.className = 'cat-btn px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition shrink-0';
+            });
+            const activeBtn = document.getElementById('btn-cat-' + cat);
+            if (activeBtn) {
+                if (cat === 'ordered') {
+                    activeBtn.className = 'cat-btn px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-semibold transition shrink-0 shadow-sm';
+                } else {
+                    activeBtn.className = 'cat-btn px-3 py-1.5 rounded-xl bg-slate-900 text-white font-semibold transition shrink-0 shadow-sm';
+                }
+            }
+            renderCatalog();
+        }
+
+        // Search Handlers
+        let searchDebounceTimer;
+        function onSearchInput(val) {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                state.searchQuery = (val || '').trim().toLowerCase();
+                const clearBtn = document.getElementById('search-clear-btn');
+                if (state.searchQuery) {
+                    clearBtn.classList.remove('hidden');
+                } else {
+                    clearBtn.classList.add('hidden');
+                }
+                renderCatalog();
+            }, 150);
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            onSearchInput('');
+        }
+
+        function resetFilters() {
+            document.getElementById('search-input').value = '';
+            state.searchQuery = '';
+            setCategory('all');
+        }
+
+        // View Mode Switcher
+        function setViewMode(mode) {
+            state.viewMode = mode;
+            const gridBtn = document.getElementById('btn-view-grid');
+            const tableBtn = document.getElementById('btn-view-table');
+            const gridContainer = document.getElementById('catalog-grid');
+            const tableContainer = document.getElementById('catalog-table-wrapper');
+
+            if (mode === 'grid') {
+                gridBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-800 shadow-sm transition';
+                tableBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 transition';
+                gridContainer.classList.remove('hidden');
+                tableContainer.classList.add('hidden');
+            } else {
+                tableBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-800 shadow-sm transition';
+                gridBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 transition';
+                tableContainer.classList.remove('hidden');
+                gridContainer.classList.add('hidden');
+            }
+            renderCatalog();
+        }
+
+        // Filter Logic
+        function getFilteredProducts() {
+            return state.products.filter(p => {
+                if (state.category === 'ordered') {
+                    if (!state.cart[p.id] || state.cart[p.id] <= 0) return false;
+                } else if (state.category !== 'all') {
+                    if (p.category !== state.category) return false;
+                }
+
+                if (state.searchQuery) {
+                    const q = state.searchQuery;
+                    const matchName = (p.name || '').toLowerCase().includes(q);
+                    const matchCode = (p.code || '').toLowerCase().includes(q);
+                    const matchBarcode = (p.barcode || '').toLowerCase().includes(q);
+                    const matchCat = (p.category || '').toLowerCase().includes(q);
+                    if (!matchName && !matchCode && !matchBarcode && !matchCat) return false;
+                }
+
+                return true;
+            });
+        }
+
+        // Catalog Rendering
+        function renderCatalog() {
+            const filtered = getFilteredProducts();
+            const gridContainer = document.getElementById('catalog-grid');
+            const tableBody = document.getElementById('catalog-table-body');
+            const emptyState = document.getElementById('empty-state');
+            const filterText = document.getElementById('filter-status-text');
+
+            let catName = state.category === 'all' ? 'ทั้งหมด' : (state.category === 'ordered' ? 'รายการที่กำลังสั่ง' : 'หมวด ' + state.category);
+            filterText.textContent = `${catName} (${filtered.length} รายการ)`;
+
+            if (filtered.length === 0) {
+                gridContainer.innerHTML = '';
+                tableBody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            if (state.viewMode === 'grid') {
+                gridContainer.innerHTML = filtered.map(p => renderProductCard(p)).join('');
+            } else {
+                tableBody.innerHTML = filtered.map((p, idx) => renderProductTableRow(p, idx + 1)).join('');
+            }
+        }
+
+        // Render Single Product Card (Grid)
+        function renderProductCard(p) {
+            const qty = state.cart[p.id] || 0;
+            const isOrdered = qty > 0;
+            const imgSrc = p.imageThumb || p.image || '';
+            const makroUrl = p.code ? `https://www.makro.pro/th/search?q=${encodeURIComponent(p.code)}` : `https://www.makro.pro/th/search?q=${encodeURIComponent(p.name)}`;
+
+            let catBadge = 'bg-slate-100 text-slate-700';
+            if (p.category === 'ขนม') catBadge = 'bg-amber-100 text-amber-800';
+            else if (p.category === 'เครื่องดื่ม') catBadge = 'bg-sky-100 text-sky-800';
+            else if (p.category === 'เครื่องปรุง-ทั่วไป') catBadge = 'bg-emerald-100 text-emerald-800';
+
+            return `
+            <div id="product-card-${p.id}" class="bg-white rounded-2xl p-2.5 border transition-all duration-200 flex flex-col justify-between group ${isOrdered ? 'border-rose-500 shadow-md ring-2 ring-rose-500/20 bg-rose-50/20' : 'border-slate-200/80 hover:border-slate-300 hover:shadow-md'}">
+                <div>
+                    <div class="relative aspect-square w-full rounded-xl bg-slate-50 overflow-hidden mb-2 border border-slate-100 flex items-center justify-center">
+                        ${imgSrc ? `
+                            <img src="${imgSrc}" alt="${escapeHtml(p.name)}" loading="lazy" class="w-full h-full object-contain p-1 group-hover:scale-105 transition duration-200">
+                        ` : `
+                            <i class="fa-solid fa-box text-slate-300 text-3xl"></i>
+                        `}
+
+                        <span class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold ${catBadge} shadow-xs">
+                            ${p.category}
+                        </span>
+
+                        <!-- Makro Code Quick Link -->
+                        ${p.code ? `
+                            <a href="${makroUrl}" target="_blank" title="เปิดดูใน Makro Pro" class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-md bg-rose-600/90 hover:bg-rose-700 text-white text-[10px] font-mono flex items-center gap-1 shadow-xs transition">
+                                <span>#${p.code}</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                            </a>
+                        ` : ''}
+                    </div>
+
+                    <div class="flex items-start justify-between gap-1 mb-1">
+                        <h4 class="text-xs font-semibold text-slate-800 line-clamp-2 min-h-[32px] leading-snug flex-1" title="${escapeHtml(p.name)}">
+                            ${p.name}
+                        </h4>
+                        <button onclick="openEditProductModal(${p.id})" title="แก้ไขสินค้านี้" class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-600 p-1 transition shrink-0">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-baseline justify-between mb-2">
+                        <div>
+                            <span class="text-[11px] text-slate-400 block">ราคาส่ง/EA</span>
+                            <span class="text-sm font-bold text-rose-600">฿${p.cost.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                            <span class="text-[10px] text-slate-500 font-normal">/${p.unit}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-slate-400 block">ขายหน้าร้าน</span>
+                            <span class="text-xs font-semibold text-slate-700">฿${p.price.toLocaleString('en-US', {minimumFractionDigits: 0})}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-slate-100">
+                    <div class="flex items-center justify-between gap-1">
+                        <button onclick="addQuantity(${p.id}, -1)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 active:scale-90 flex items-center justify-center font-bold transition">
+                            <i class="fa-solid fa-minus text-xs"></i>
+                        </button>
+                        <input type="number" min="0" value="${qty || ''}" placeholder="0"
+                               onchange="setQuantity(${p.id}, this.value)"
+                               class="w-12 h-8 text-center text-xs font-bold rounded-lg border ${isOrdered ? 'border-rose-400 bg-white text-rose-700 ring-1 ring-rose-300' : 'border-slate-200 bg-slate-50 text-slate-700'} focus:outline-none focus:ring-2 focus:ring-rose-500">
+                        <button onclick="addQuantity(${p.id}, 1)" class="w-8 h-8 rounded-lg bg-rose-600 hover:bg-rose-700 text-white active:scale-90 flex items-center justify-center font-bold transition shadow-sm">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-1 mt-1.5 text-[10px]">
+                        <button onclick="addQuantity(${p.id}, 1)" class="py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 transition font-medium">+1</button>
+                        <button onclick="addQuantity(${p.id}, 2)" class="py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 transition font-medium">+2</button>
+                        <button onclick="addQuantity(${p.id}, 5)" class="py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 transition font-medium">+5</button>
+                        <button onclick="setQuantity(${p.id}, 0)" title="ล้างจำนวน" class="py-0.5 rounded bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition font-medium">
+                            <i class="fa-solid fa-xmark text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // Render Table Row (Table View)
+        function renderProductTableRow(p, index) {
+            const qty = state.cart[p.id] || 0;
+            const isOrdered = qty > 0;
+            const total = qty * p.cost;
+            const imgSrc = p.imageThumb || p.image || '';
+            const makroUrl = p.code ? `https://www.makro.pro/th/search?q=${encodeURIComponent(p.code)}` : `https://www.makro.pro/th/search?q=${encodeURIComponent(p.name)}`;
+
+            return `
+            <tr id="table-row-${p.id}" class="hover:bg-slate-50/80 transition ${isOrdered ? 'bg-rose-50/40 font-medium' : ''}">
+                <td class="p-2.5 text-center text-slate-400">${index}</td>
+                <td class="p-2.5 font-mono text-slate-700">
+                    <span class="px-1.5 py-0.5 bg-slate-100 rounded text-[11px] font-semibold">${p.code || '-'}</span>
+                </td>
+                <td class="p-2 text-center">
+                    <div class="w-10 h-10 mx-auto rounded-lg bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center">
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${escapeHtml(p.name)}" class="w-full h-full object-contain p-0.5">` : `<i class="fa-solid fa-box text-slate-300 text-xs"></i>`}
+                    </div>
+                </td>
+                <td class="p-2.5">
+                    <div class="font-semibold text-slate-900 leading-tight">${p.name}</div>
+                    ${p.barcode ? `<div class="text-[10px] text-slate-400 font-mono">Barcode: ${p.barcode}</div>` : ''}
+                </td>
+                <td class="p-2.5 text-slate-600">${p.category}</td>
+                <td class="p-2.5 text-right font-semibold text-rose-600">฿${p.cost.toFixed(2)}</td>
+                <td class="p-2.5 text-center text-slate-600">${p.unit}</td>
+                <td class="p-2.5 text-right text-slate-600">฿${p.price.toFixed(2)}</td>
+                <td class="p-2 text-center bg-rose-50/50 border-x border-rose-100">
+                    <div class="flex items-center justify-center gap-1">
+                        <button onclick="addQuantity(${p.id}, -1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center text-xs">-</button>
+                        <input type="number" min="0" value="${qty || ''}" placeholder="0"
+                               onchange="setQuantity(${p.id}, this.value)"
+                               class="w-14 h-7 text-center text-xs font-bold rounded border ${isOrdered ? 'border-rose-400 bg-white text-rose-700' : 'border-slate-200 bg-white'} focus:outline-none focus:ring-1 focus:ring-rose-500">
+                        <button onclick="addQuantity(${p.id}, 1)" class="w-6 h-6 rounded bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-xs">+</button>
+                    </div>
+                </td>
+                <td class="p-2.5 text-right font-bold ${isOrdered ? 'text-rose-600' : 'text-slate-400'}">
+                    ${isOrdered ? '฿' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '-'}
+                </td>
+                <td class="p-2 text-center space-x-1">
+                    <a href="${makroUrl}" target="_blank" class="text-rose-600 hover:text-rose-800 p-1 inline-block" title="เปิด Makro Pro">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </a>
+                    <button onclick="openEditProductModal(${p.id})" class="text-slate-400 hover:text-slate-700 p-1 inline-block" title="แก้ไข">
+                        <i class="fa-solid fa-pen text-xs"></i>
+                    </button>
+                </td>
+            </tr>
+            `;
+        }
+
+        // Lightweight update for single product without re-rendering entire list
+        function updateProductUI(id) {
+            const qty = state.cart[id] || 0;
+            const p = state.products.find(x => x.id === id);
+            if (!p) return;
+
+            if (state.category === 'ordered') {
+                renderCatalog();
+                return;
+            }
+
+            const card = document.getElementById(`product-card-${id}`);
+            if (card) {
+                const input = card.querySelector('input');
+                if (input) input.value = qty || '';
+                if (qty > 0) {
+                    card.className = 'bg-white rounded-2xl p-2.5 border transition-all duration-200 flex flex-col justify-between group border-rose-500 shadow-md ring-2 ring-rose-500/20 bg-rose-50/20';
+                    if (input) input.className = 'w-12 h-8 text-center text-xs font-bold rounded-lg border border-rose-400 bg-white text-rose-700 ring-1 ring-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-500';
+                } else {
+                    card.className = 'bg-white rounded-2xl p-2.5 border transition-all duration-200 flex flex-col justify-between group border-slate-200/80 hover:border-slate-300 hover:shadow-md';
+                    if (input) input.className = 'w-12 h-8 text-center text-xs font-bold rounded-lg border border-slate-200 bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500';
+                }
+            }
+
+            const row = document.getElementById(`table-row-${id}`);
+            if (row) {
+                const input = row.querySelector('input');
+                if (input) input.value = qty || '';
+                const totalCell = row.cells[9];
+                if (qty > 0) {
+                    row.className = 'hover:bg-slate-50/80 transition bg-rose-50/40 font-medium';
+                    if (totalCell) totalCell.innerHTML = '฿' + (qty * p.cost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                } else {
+                    row.className = 'hover:bg-slate-50/80 transition';
+                    if (totalCell) totalCell.innerHTML = '-';
+                }
+            }
+        }
+
+        // Update Bottom Bar & Drawer Summary Stats
+        function updateSummaryUI() {
+            let totalSkus = 0;
+            let totalUnits = 0;
+            let totalCost = 0;
+            let totalRevenue = 0;
+
+            for (const [idStr, qty] of Object.entries(state.cart)) {
+                if (qty > 0) {
+                    const id = parseInt(idStr);
+                    const p = state.products.find(x => x.id === id);
+                    if (p) {
+                        totalSkus += 1;
+                        totalUnits += qty;
+                        totalCost += (p.cost * qty);
+                        totalRevenue += (p.price * qty);
+                    }
+                }
+            }
+
+            const profit = totalRevenue - totalCost;
+
+            document.getElementById('top-cart-badge').textContent = totalSkus;
+            document.getElementById('btn-cat-ordered-count').textContent = `(${totalSkus})`;
+
+            document.getElementById('bar-total-skus').textContent = totalSkus.toLocaleString();
+            document.getElementById('bar-total-units').textContent = totalUnits.toLocaleString();
+            document.getElementById('bar-total-cost').textContent = totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('bar-est-revenue').textContent = totalRevenue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('bar-est-profit').textContent = '+' + profit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            document.getElementById('drawer-header-subtitle').textContent = `${totalSkus} รายการที่เลือกสั่ง (${totalUnits} หน่วย)`;
+            document.getElementById('drawer-summary-skus').textContent = `${totalSkus} รายการ`;
+            document.getElementById('drawer-summary-units').textContent = `${totalUnits} หน่วย`;
+            document.getElementById('drawer-summary-total').textContent = `฿${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            const drawer = document.getElementById('cart-drawer');
+            if (!drawer.classList.contains('hidden')) {
+                renderDrawerItems();
+            }
+        }
+
+        // Cart Drawer
+        function openCartDrawer() {
+            renderDrawerItems();
+            document.getElementById('cart-drawer').classList.remove('hidden');
+        }
+
+        function closeCartDrawer() {
+            document.getElementById('cart-drawer').classList.add('hidden');
+        }
+
+        function renderDrawerItems() {
+            const container = document.getElementById('drawer-items-list');
+            const orderedIds = Object.keys(state.cart).map(Number).filter(id => state.cart[id] > 0);
+
+            if (orderedIds.length === 0) {
+                container.innerHTML = `
+                    <div class="py-12 text-center text-slate-400">
+                        <i class="fa-solid fa-basket-shopping text-3xl mb-2 text-slate-300"></i>
+                        <p class="text-xs">ยังไม่มีสินค้าในรายการสั่งซื้อ</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = orderedIds.map(id => {
+                const p = state.products.find(x => x.id === id);
+                if (!p) return '';
+                const qty = state.cart[id];
+                const lineTotal = p.cost * qty;
+                const imgSrc = p.imageThumb || p.image || '';
+
+                return `
+                <div class="py-3 flex items-center justify-between gap-2.5">
+                    <div class="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+                        ${imgSrc ? `<img src="${imgSrc}" class="w-full h-full object-contain p-0.5">` : `<i class="fa-solid fa-box text-slate-300"></i>`}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h5 class="text-xs font-semibold text-slate-900 truncate">${p.name}</h5>
+                        <div class="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+                            ${p.code ? `<span class="font-mono bg-slate-100 px-1 rounded text-[10px]">#${p.code}</span>` : ''}
+                            <span>฿${p.cost.toFixed(2)} / ${p.unit}</span>
+                        </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="flex items-center gap-1 mb-1">
+                            <button onclick="addQuantity(${p.id}, -1)" class="w-5 h-5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs flex items-center justify-center">-</button>
+                            <span class="w-7 text-center text-xs font-bold text-slate-800">${qty}</span>
+                            <button onclick="addQuantity(${p.id}, 1)" class="w-5 h-5 rounded bg-rose-600 hover:bg-rose-700 text-white text-xs flex items-center justify-center">+</button>
+                        </div>
+                        <span class="text-xs font-bold text-rose-600">฿${lineTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Copy Makro Codes Action
+        function copyMakroCodes() {
+            const orderedItems = state.products.filter(p => state.cart[p.id] > 0);
+            if (orderedItems.length === 0) {
+                showToast('ยังไม่มีรายการที่เลือกสั่ง', 'info');
+                return;
+            }
+
+            const codes = orderedItems.map(p => p.code || p.name).join(', ');
+            navigator.clipboard.writeText(codes).then(() => {
+                showToast(`คัดลอกรหัส Makro สำเร็จ (${orderedItems.length} รหัส)`, 'success');
+            }).catch(() => {
+                showToast('ไม่สามารถเข้าถึงคลิปบอร์ดได้', 'error');
+            });
+        }
+
+        // Copy Formatted Order Text for LINE
+        function copyLineOrder() {
+            const orderedItems = state.products.filter(p => state.cart[p.id] > 0);
+            if (orderedItems.length === 0) {
+                showToast('ยังไม่มีรายการที่เลือกสั่ง', 'info');
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+            let text = `📦 รายการสั่งของ Makro - สหกรณ์โรงเรียนบ้านน้ำพร\n`;
+            text += `📅 วันที่: ${dateStr} เวลา ${timeStr}\n`;
+            text += `------------------------------------\n`;
+
+            const grouped = {
+                'ขนม': orderedItems.filter(p => p.category === 'ขนม'),
+                'เครื่องดื่ม': orderedItems.filter(p => p.category === 'เครื่องดื่ม'),
+                'เครื่องปรุง-ทั่วไป': orderedItems.filter(p => p.category === 'เครื่องปรุง-ทั่วไป')
+            };
+
+            let totalQty = 0;
+            let totalAmount = 0;
+
+            for (const [cat, list] of Object.entries(grouped)) {
+                if (list.length > 0) {
+                    text += `\n[ หมวด${cat} ]\n`;
+                    list.forEach((p, i) => {
+                        const qty = state.cart[p.id];
+                        const lineCost = p.cost * qty;
+                        totalQty += qty;
+                        totalAmount += lineCost;
+                        const codeStr = p.code ? ` (#${p.code})` : '';
+                        text += `${i + 1}. ${p.name}${codeStr} = ${qty} ${p.unit}\n`;
+                    });
+                }
+            }
+
+            text += `\n------------------------------------\n`;
+            text += `รวมทั้งหมด: ${orderedItems.length} รายการ (${totalQty} หน่วย)\n`;
+            text += `ยอดเงินรวมประมาณ: ${totalAmount.toLocaleString('en-US', {minimumFractionDigits: 2})} บาท\n`;
+            text += `ติดต่อ: ครูนิรุทธิ์ 081-8713581 / ครูสุภาพร 093-4676466`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('คัดลอกข้อความสำหรับส่ง LINE เรียบร้อยแล้ว!', 'success');
+            }).catch(() => {
+                showToast('เกิดข้อผิดพลาดในการคัดลอก', 'error');
+            });
+        }
+
+        // Export to Clean Excel (.xlsx) using SheetJS
+        function exportToExcel() {
+            const orderedItems = state.products.filter(p => state.cart[p.id] > 0);
+            if (orderedItems.length === 0) {
+                showToast('ยังไม่มีรายการที่เลือกสั่ง', 'info');
+                return;
+            }
+
+            try {
+                const wb = XLSX.utils.book_new();
+
+                const wsData = [
+                    ['รายการสั่งของ สหกรณ์โรงเรียนบ้านน้ำพร (Makro)'],
+                    ['115 หมู่ 2 ต.ปากตม อ.เชียงคาน จ.เลย 42110'],
+                    ['ติดต่อ ครูนิรุทธิ์ เสวะนา 081-8713581 ครูสุภาพร พิมพุธ 093-4676466'],
+                    ['ผู้อำนวยการโรงเรียน นางศิวาลัย แก้วเขียว 062-5461959'],
+                    ['อัปเดตล่าสุด: ' + new Date().toLocaleString('th-TH')],
+                    ['ลำดับที่', 'รหัส Makro', 'หมวดหมู่', 'สินค้า', 'จำนวน', 'หน่วย', 'Barcode', 'ราคาส่ง/EA', 'ราคาส่ง/หน่วย', 'ราคาขาย', 'รวมเงิน(บาท)']
+                ];
+
+                let rowNum = 1;
+                let totalCost = 0;
+
+                orderedItems.forEach(p => {
+                    const qty = state.cart[p.id];
+                    const lineCost = qty * p.cost;
+                    totalCost += lineCost;
+                    wsData.push([
+                        rowNum++,
+                        p.code,
+                        p.category,
+                        p.name,
+                        qty,
+                        p.unit,
+                        p.barcode,
+                        p.cost,
+                        p.unitCost,
+                        p.price,
+                        lineCost
+                    ]);
+                });
+
+                wsData.push([]);
+                wsData.push(['', '', '', 'ยอดรวมทั้งสิ้น', '', '', '', '', '', '', totalCost]);
+
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+                XLSX.utils.book_append_sheet(wb, ws, 'รวมสั่ง_Makro');
+
+                const now = new Date();
+                const dStr = now.toISOString().slice(0, 10);
+                XLSX.writeFile(wb, `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${dStr}.xlsx`);
+                showToast('ส่งออกไฟล์ Excel สำเร็จ', 'success');
+            } catch (err) {
+                showToast('เกิดข้อผิดพลาดในการส่งออก Excel: ' + err.message, 'error');
+            }
+        }
+
+        // Save & Restore Order Draft History
+        function saveOrderDraft() {
+            const orderedItems = state.products.filter(p => state.cart[p.id] > 0);
+            if (orderedItems.length === 0) {
+                showToast('ยังไม่มีรายการที่เลือกสั่ง', 'info');
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+            let totalUnits = 0;
+            let totalCost = 0;
+            orderedItems.forEach(p => {
+                const qty = state.cart[p.id];
+                totalUnits += qty;
+                totalCost += (p.cost * qty);
+            });
+
+            const entry = {
+                id: Date.now(),
+                timestamp: now.toISOString(),
+                label: `สั่งของ Makro (${dateStr} ${timeStr})`,
+                skus: orderedItems.length,
+                units: totalUnits,
+                totalCost: totalCost,
+                cart: { ...state.cart }
+            };
+
+            state.history.unshift(entry);
+            if (state.history.length > 20) state.history.pop();
+            saveHistoryToStorage();
+            recordAction('create_order', `บันทึกการสั่งซื้อ (${dateStr} ${timeStr})`, `${orderedItems.length} รายการ | รวม ${totalUnits} ชิ้น | ยอดรวม ฿${totalCost.toLocaleString('th-TH', {minimumFractionDigits: 2})}`, { entry });
+            showToast('บันทึกประวัติการสั่งซื้อเรียบร้อยแล้ว', 'success');
+        }
+
+        function openHistoryModal() {
+            renderHistoryList();
+            document.getElementById('history-modal').classList.remove('hidden');
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('history-modal').classList.add('hidden');
+        }
+
+        function renderHistoryList() {
+            const container = document.getElementById('history-list');
+            if (!state.history || state.history.length === 0) {
+                container.innerHTML = `
+                    <div class="py-8 text-center text-slate-400 text-xs">
+                        <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-300"></i>
+                        <p>ยังไม่มีประวัติการสั่งซื้อที่บันทึกไว้</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = state.history.map(item => `
+                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-3 hover:border-slate-300 transition">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-900">${item.label}</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">
+                            ${item.skus} รายการ (${item.units} หน่วย) • ยอดเงิน: <span class="font-semibold text-rose-600">฿${item.totalCost.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="reorderFromHistory(${item.id})" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition shadow-sm">
+                            <i class="fa-solid fa-rotate-right text-xs"></i>
+                            <span>สั่งซ้ำรอบนี้</span>
+                        </button>
+                        <button onclick="deleteHistoryItem(${item.id})" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-slate-200/50 transition">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function reorderFromHistory(historyId) {
+            const record = state.history.find(h => h.id === historyId);
+            if (!record) return;
+
+            if (confirm(`คุณต้องการโหลดรายการสั่งซื้อ '${record.label}' มาแทนที่รายการปัจจุบันใช่หรือไม่?`)) {
+                state.cart = { ...record.cart };
+                saveCartToStorage();
+                renderCatalog();
+                updateSummaryUI();
+                closeHistoryModal();
+                showToast('โหลดรายการสั่งซื้อเดิมเรียบร้อยแล้ว', 'success');
+            }
+        }
+
+        function deleteHistoryItem(historyId) {
+            if (confirm('ต้องการลบประวัติการสั่งนี้ใช่หรือไม่?')) {
+                state.history = state.history.filter(h => h.id !== historyId);
+                saveHistoryToStorage();
+                renderHistoryList();
+                showToast('ลบรายการประวัติแล้ว', 'info');
+            }
+        }
+
+        // Product Management (CRUD) Functions
+        function openProductMgmtModal() {
+            renderMgmtTable();
+            document.getElementById('product-mgmt-modal').classList.remove('hidden');
+        }
+
+        function closeProductMgmtModal() {
+            document.getElementById('product-mgmt-modal').classList.add('hidden');
+        }
+
+        function renderMgmtTable() {
+            const tbody = document.getElementById('mgmt-table-body');
+            const search = (document.getElementById('mgmt-search-input').value || '').trim().toLowerCase();
+            const cat = document.getElementById('mgmt-cat-select').value;
+
+            const filtered = state.products.filter(p => {
+                if (cat !== 'all' && p.category !== cat) return false;
+                if (search) {
+                    const matchName = (p.name || '').toLowerCase().includes(search);
+                    const matchCode = (p.code || '').toLowerCase().includes(search);
+                    const matchBarcode = (p.barcode || '').toLowerCase().includes(search);
+                    if (!matchName && !matchCode && !matchBarcode) return false;
+                }
+                return true;
+            });
+
+            document.getElementById('mgmt-count-info').textContent = `แสดง ${filtered.length} จากทั้งหมด ${state.products.length} รายการ`;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">ไม่พบรายการสินค้าที่ค้นหา</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(p => {
+                const imgSrc = p.imageThumb || p.image || '';
+                return `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-2 text-center">
+                        <div class="w-9 h-9 mx-auto rounded-lg bg-slate-50 border border-slate-200 overflow-hidden flex items-center justify-center">
+                            ${imgSrc ? `<img src="${imgSrc}" class="w-full h-full object-contain p-0.5">` : `<i class="fa-solid fa-box text-slate-300 text-xs"></i>`}
+                        </div>
+                    </td>
+                    <td class="p-2 font-mono text-slate-700 font-semibold">${p.code || '-'}</td>
+                    <td class="p-2">
+                        <div class="font-semibold text-slate-900 line-clamp-1">${escapeHtml(p.name)}</div>
+                        ${p.barcode ? `<div class="text-[10px] text-slate-400 font-mono">Barcode: ${p.barcode}</div>` : ''}
+                    </td>
+                    <td class="p-2 text-slate-600">${p.category}</td>
+                    <td class="p-2 text-right font-bold text-rose-600">฿${p.cost.toFixed(2)}</td>
+                    <td class="p-2 text-center text-slate-600">${p.unit}</td>
+                    <td class="p-2 text-right text-slate-600">฿${p.price.toFixed(2)}</td>
+                    <td class="p-2 text-center space-x-1">
+                        <button onclick="openEditProductModal(${p.id})" class="p-1.5 text-slate-500 hover:text-rose-600 rounded hover:bg-slate-100 transition" title="แก้ไข">
+                            <i class="fa-solid fa-pen text-xs"></i>
+                        </button>
+                        <button onclick="deleteProductConfirm(${p.id})" class="p-1.5 text-slate-400 hover:text-rose-600 rounded hover:bg-rose-50 transition" title="ลบสินค้า">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        
+        // Toggle mobile menu dropdown
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu-dropdown');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobile-menu-dropdown');
+            const btn = document.getElementById('btn-mobile-menu');
+            if (menu && !menu.classList.contains('hidden')) {
+                if (btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.add('hidden');
+                }
+            }
+        });
+
+        // Smart Makro Pro Live Fetcher with Multi-Result Candidate Selection
+        let makroSearchDebounceTimer = null;
+
+        function handleMakroSearchInput(input) {
+            const val = input.value.trim();
+            const btnClear = document.getElementById('btn-clear-makro-search');
+            if (btnClear) {
+                if (val.length > 0) btnClear.classList.remove('hidden');
+                else btnClear.classList.add('hidden');
+            }
+
+            // Clear previous debounce timer
+            if (makroSearchDebounceTimer) clearTimeout(makroSearchDebounceTimer);
+
+            // If empty, hide results
+            if (!val) {
+                const resultsBox = document.getElementById('makro-search-results-box');
+                if (resultsBox) resultsBox.classList.add('hidden');
+                const statusEl = document.getElementById('makro-fetch-status');
+                if (statusEl) statusEl.innerHTML = 'พิมพ์ชื่อสินค้าเพื่อค้นหาตัวที่ตรง/ใกล้เคียง';
+                return;
+            }
+
+            // Debounce auto-search if 2 or more characters typed
+            if (val.length >= 2) {
+                makroSearchDebounceTimer = setTimeout(() => {
+                    fetchFromMakroPro();
+                }, 550);
+            }
+        }
+
+        let makroCachedBuildId = 'OsOiEo8xu6If2DYBr57VV';
+
+        function cleanMakroQuery(raw) {
+            let q = (raw || '').trim();
+            // Strip wrapping quotes, brackets, bullets, dashes
+            q = q.replace(/^["'“‘\[\(•\s\-_*]+|["'”’\]\)•\s\-_*]+$/g, '').trim();
+
+            // Extract Makro ID or query if full URL is pasted
+            const urlProductMatch = q.match(/makro\.pro\/(?:[a-z]{2}\/)?p\/([0-9]+)/i);
+            if (urlProductMatch) return urlProductMatch[1];
+
+            const urlSearchMatch = q.match(/makro\.pro\/(?:[a-z]{2}\/)?c\/search\?.*?[?&]q=([^&]+)/i);
+            if (urlSearchMatch) {
+                try { return decodeURIComponent(urlSearchMatch[1]).trim(); } catch(e) { return urlSearchMatch[1].trim(); }
+            }
+            return q;
+        }
+
+        function parseMakroHits(rawHits) {
+            return (rawHits || []).map(h => {
+                const doc = h.document || {};
+                const cats = (doc.categories || []).join(' ').toLowerCase();
+                const title = doc.title || doc.productName || '';
+                let category = 'เครื่องปรุง-ทั่วไป';
+                if (cats.includes('snack') || cats.includes('biscuit') || cats.includes('candy') || cats.includes('chocolate') || cats.includes('chip') || /ขนม|ช็อก|เวเฟอร์|มันฝรั่ง|คุกกี้|ลูกอม/.test(title)) {
+                    category = 'ขนม';
+                } else if (cats.includes('beverage') || cats.includes('drink') || cats.includes('coffee') || cats.includes('tea') || cats.includes('water') || cats.includes('milk') || cats.includes('juice') || /น้ำ|นม|กาแฟ|ชา|โซดา|โออิชิ|โค้ก|เป๊ปซี่/.test(title)) {
+                    category = 'เครื่องดื่ม';
+                }
+                const rawPrice = doc.displayPrice !== undefined ? doc.displayPrice : (doc.originalPrice !== undefined ? doc.originalPrice : 0);
+                let imgUrl = '';
+                if (Array.isArray(doc.images) && doc.images.length > 0) imgUrl = doc.images[0];
+                else if (doc.image) imgUrl = doc.image;
+
+                return {
+                    code: String(doc.makroId || '').trim(),
+                    name: title.trim(),
+                    price: parseFloat(rawPrice) || 0,
+                    barcode: String(doc.itemBarCode || (doc.itemBarCodes ? doc.itemBarCodes[0] : '')).trim(),
+                    image: imgUrl,
+                    category: category,
+                    brand: doc.brand || '',
+                    unit: doc.unitType || 'Pack'
+                };
+            });
+        }
+
+        async function fetchFromMakroService(cleanQ) {
+            // 1. Try local/serverless endpoints first (if running on Netlify Functions or local server)
+            const localEndpoints = [
+                `/.netlify/functions/makro-search?q=${encodeURIComponent(cleanQ)}`,
+                `/api/makro-search?q=${encodeURIComponent(cleanQ)}`
+            ];
+            for (const ep of localEndpoints) {
+                try {
+                    const res = await fetch(ep, { signal: AbortSignal.timeout(5000) });
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json && json.success && Array.isArray(json.hits) && json.hits.length > 0) {
+                            return json.hits;
+                        }
+                    }
+                } catch(e) {}
+            }
+
+            const workerProxy = 'https://cors-get-proxy.sirjosh.workers.dev/?url=';
+
+            // 2. High-speed Fast Next.js JSON strategy (~20KB, sub-second)
+            if (makroCachedBuildId) {
+                try {
+                    const jsonUrl = `https://www.makro.pro/_next/data/${makroCachedBuildId}/th/c/search.json?q=${encodeURIComponent(cleanQ)}`;
+                    const res = await fetch(workerProxy + encodeURIComponent(jsonUrl), { signal: AbortSignal.timeout(7000) });
+                    if (res.ok) {
+                        const data = await res.json();
+                        const hits = data?.pageProps?.initialSearchResult?.hits || [];
+                        if (hits.length > 0) {
+                            return parseMakroHits(hits);
+                        }
+                    } else if (res.status === 404) {
+                        makroCachedBuildId = null; // Build ID rotated, fall to HTML
+                    }
+                } catch(e) {}
+            }
+
+            // 3. Full HTML strategy with buildId self-healing
+            try {
+                const htmlUrl = `https://www.makro.pro/c/search?q=${encodeURIComponent(cleanQ)}`;
+                const res = await fetch(workerProxy + encodeURIComponent(htmlUrl), { signal: AbortSignal.timeout(12000) });
+                if (res.ok) {
+                    const html = await res.text();
+                    const m = html.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/);
+                    if (m) {
+                        const nextData = JSON.parse(m[1]);
+                        if (nextData.buildId) makroCachedBuildId = nextData.buildId;
+                        const hits = nextData?.props?.pageProps?.initialSearchResult?.hits || [];
+                        if (hits.length > 0) {
+                            return parseMakroHits(hits);
+                        }
+                    }
+                }
+            } catch(e) {}
+
+            return [];
+        }
+
+        async function fetchFromMakroPro() {
+            const queryInput = document.getElementById('makro-search-query');
+            const rawQ = queryInput ? queryInput.value : '';
+            const cleanQ = cleanMakroQuery(rawQ);
+            const statusEl = document.getElementById('makro-fetch-status');
+            const resultsBox = document.getElementById('makro-search-results-box');
+            const btnFetch = document.getElementById('btn-fetch-makro');
+            const iconSearch = document.getElementById('icon-fetch-search');
+            const iconLoading = document.getElementById('icon-fetch-loading');
+
+            if (!cleanQ) {
+                showToast('กรุณากรอกรหัสสินค้า Makro หรือชื่อสินค้า', 'warning');
+                if (queryInput) queryInput.focus();
+                return;
+            }
+
+            // Check if phone has internet
+            if (!navigator.onLine) {
+                if (statusEl) {
+                    statusEl.innerHTML = '<span class="text-rose-600 font-bold">⚠️ โทรศัพท์ไม่ได้เชื่อมต่อเน็ต (สามารถกรอกเองด้านล่างได้)</span>';
+                }
+                showToast('ไม่สามารถดึงข้อมูลได้: โทรศัพท์ไม่ได้เชื่อมต่ออินเทอร์เน็ต', 'warning');
+                return;
+            }
+
+            if (btnFetch) btnFetch.disabled = true;
+            if (iconSearch) iconSearch.classList.add('hidden');
+            if (iconLoading) iconLoading.classList.remove('hidden');
+            if (statusEl) statusEl.innerHTML = `<span class="text-rose-600 animate-pulse font-medium"><i class="fa-solid fa-spinner fa-spin mr-1"></i>กำลังค้นหา "${escapeHtml(cleanQ)}" ใน Makro Pro...</span>`;
+
+            try {
+                let hits = await fetchFromMakroService(cleanQ);
+
+                // Smart Fallback: If 0 hits and query has multiple words, try first 2-3 words
+                if (hits.length === 0 && cleanQ.includes(' ')) {
+                    const words = cleanQ.split(/\s+/).filter(Boolean);
+                    if (words.length > 2) {
+                        const shorterQ = words.slice(0, 2).join(' ');
+                        hits = await fetchFromMakroService(shorterQ);
+                    }
+                }
+
+                if (!hits || hits.length === 0) {
+                    if (statusEl) statusEl.innerHTML = '<span class="text-amber-600 font-medium">ไม่พบสินค้าใน Makro Pro (ลองใช้คำค้นอื่น หรือกรอกเองได้)</span>';
+                    if (resultsBox) {
+                        resultsBox.innerHTML = `
+                            <div class="p-4 text-center text-slate-400 space-y-1">
+                                <i class="fa-solid fa-magnifying-glass text-xl text-slate-300"></i>
+                                <p class="font-medium text-xs text-slate-600">ไม่พบสินค้าตรงกับคำว่า "${escapeHtml(cleanQ)}"</p>
+                                <p class="text-[11px] text-slate-400">กรุณาลองพิมพ์คำค้นที่สั้นลง เช่น "เลย์" หรือใช้รหัสสินค้า Makro เช่น 929370</p>
+                            </div>
+                        `;
+                        resultsBox.classList.remove('hidden');
+                    }
+                    showToast(`ไม่พบสินค้าตรงกับ "${cleanQ}" ใน Makro Pro`, 'warning');
+                    return;
+                }
+
+                window._makroSearchHits = hits;
+
+                // Render result cards for user to choose matching or close items
+                if (statusEl) {
+                    statusEl.innerHTML = `<span class="text-emerald-700 font-bold">✨ พบสินค้าที่ตรง/ใกล้เคียง ${hits.length} รายการ (แตะเพื่อเลือก):</span>`;
+                }
+
+                if (resultsBox) {
+                    const cardsHtml = hits.map((hit, idx) => {
+                        let highlightedName = escapeHtml(hit.name);
+                        try {
+                            const escapedQ = cleanQ.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            const regex = new RegExp(`(${escapedQ})`, 'gi');
+                            highlightedName = highlightedName.replace(regex, '<mark class="bg-rose-100 text-rose-700 font-bold px-0.5 rounded">$1</mark>');
+                        } catch (e) {}
+
+                        return `
+                            <div id="makro-hit-${idx}" onclick="selectMakroCandidate(${idx})" 
+                                class="p-3 hover:bg-rose-50/70 cursor-pointer flex items-center gap-3 transition border-b border-slate-100 last:border-0 group">
+                                
+                                <!-- Product Image Thumbnail -->
+                                <div class="w-14 h-14 rounded-xl border border-slate-200 bg-white p-1 shrink-0 flex items-center justify-center overflow-hidden shadow-sm group-hover:border-rose-300 transition">
+                                    <img src="${hit.image || 'icon-192.png'}" alt="${escapeHtml(hit.name)}" 
+                                        class="w-full h-full object-contain" 
+                                        loading="lazy"
+                                        onerror="this.src='icon-192.png'">
+                                </div>
+
+                                <!-- Product Info -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-bold text-slate-900 text-xs sm:text-sm leading-snug line-clamp-2">${highlightedName}</div>
+                                    <div class="flex flex-wrap items-center gap-1.5 mt-1 text-[11px]">
+                                        <span class="font-mono font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">#${hit.code || '-'}</span>
+                                        <span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">${hit.category}</span>
+                                        <span class="text-slate-400">• หน่วย: ${hit.unit}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Price & Action Button -->
+                                <div class="text-right shrink-0 pl-2">
+                                    <div class="text-xs text-slate-400">ราคาส่ง Makro</div>
+                                    <div class="text-sm sm:text-base font-extrabold text-rose-600">฿${hit.price.toFixed(2)}</div>
+                                    <button type="button" class="mt-1 px-3 py-1 bg-rose-50 group-hover:bg-rose-600 text-rose-600 group-hover:text-white rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-1 ml-auto">
+                                        <i class="fa-solid fa-plus-circle text-xs"></i>
+                                        <span>เลือก</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    resultsBox.innerHTML = cardsHtml;
+                    resultsBox.classList.remove('hidden');
+                }
+
+                // If only 1 exact match, auto select it
+                if (hits.length === 1 && (hits[0].code === cleanQ || hits[0].name.toLowerCase() === cleanQ.toLowerCase())) {
+                    selectMakroCandidate(0);
+                }
+            } catch (err) {
+                if (statusEl) statusEl.innerHTML = '<span class="text-rose-600 font-medium">เกิดข้อผิดพลาดในการค้นหา (สามารถกรอกเองได้)</span>';
+                showToast('ไม่สามารถเชื่อมต่อ Makro Pro ได้: ' + err.message, 'error');
+            } finally {
+                if (btnFetch) btnFetch.disabled = false;
+                if (iconSearch) iconSearch.classList.remove('hidden');
+                if (iconLoading) iconLoading.classList.add('hidden');
+            }
+        }
+
+        // When user taps a candidate from search results
+        function selectMakroCandidate(index) {
+            if (!window._makroSearchHits || !window._makroSearchHits[index]) return;
+            const hit = window._makroSearchHits[index];
+
+            // Highlight chosen card in results list
+            const allCards = document.querySelectorAll('[id^="makro-hit-"]');
+            allCards.forEach(c => {
+                c.classList.remove('bg-emerald-50', 'border-emerald-300', 'ring-2', 'ring-emerald-400');
+            });
+            const chosenCard = document.getElementById('makro-hit-' + index);
+            if (chosenCard) {
+                chosenCard.classList.add('bg-emerald-50', 'ring-2', 'ring-emerald-400');
+            }
+
+            // Populate all form fields
+            document.getElementById('edit-prod-name').value = hit.name || '';
+            document.getElementById('edit-prod-code').value = hit.code || '';
+            document.getElementById('edit-prod-barcode').value = hit.barcode || '';
+            document.getElementById('edit-prod-category').value = hit.category || 'ขนม';
+            document.getElementById('edit-prod-unit').value = hit.unit || 'Pack';
+            document.getElementById('edit-prod-cost').value = hit.price ? hit.price.toFixed(2) : '';
+
+            // Auto calculate unit cost if "x 12" or "x 24"
+            if (hit.price > 0) {
+                const matchX = hit.name.match(/x\s*(\d+)/i);
+                if (matchX) {
+                    const pcs = parseInt(matchX[1]);
+                    if (pcs > 0) {
+                        const unitCost = (hit.price / pcs);
+                        document.getElementById('edit-prod-unit-cost').value = unitCost.toFixed(2);
+                        // Suggest retail price
+                        if (!document.getElementById('edit-prod-price').value) {
+                            document.getElementById('edit-prod-price').value = Math.ceil(unitCost * 1.15).toFixed(2);
+                        }
+                    }
+                }
+            }
+
+            // Set image preview
+            if (hit.image) {
+                currentEditingImageBase64 = hit.image;
+                const preview = document.getElementById('edit-img-preview');
+                const placeholder = document.getElementById('edit-img-placeholder');
+                if (preview) {
+                    preview.src = hit.image;
+                    preview.classList.remove('hidden');
+                }
+                if (placeholder) placeholder.classList.add('hidden');
+            }
+
+            const statusEl = document.getElementById('makro-fetch-status');
+            if (statusEl) {
+                statusEl.innerHTML = `<span class="text-emerald-700 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check text-emerald-600"></i> เลือก "${escapeHtml(hit.name.substring(0, 26))}..." แล้ว ข้อมูลถูกกรอกลงในฟอร์มเรียบร้อย</span>`;
+            }
+
+            showToast(`✓ เลือก "${hit.name.substring(0, 20)}..." เรียบร้อย`, 'success');
+
+            // Smoothly scroll down to the form
+            setTimeout(() => {
+                const formEl = document.getElementById('product-form');
+                if (formEl) {
+                    formEl.scrollBy({ top: 120, behavior: 'smooth' });
+                }
+            }, 100);
+        }
+
+        function clearMakroSearch() {
+            const q = document.getElementById('makro-search-query');
+            if (q) {
+                q.value = '';
+                q.focus();
+            }
+            const btnClear = document.getElementById('btn-clear-makro-search');
+            if (btnClear) btnClear.classList.add('hidden');
+            const box = document.getElementById('makro-search-results-box');
+            if (box) {
+                box.classList.add('hidden');
+                box.innerHTML = '';
+            }
+            const statusEl = document.getElementById('makro-fetch-status');
+            if (statusEl) statusEl.innerHTML = 'พิมพ์ชื่อสินค้าเพื่อค้นหาตัวที่ตรง/ใกล้เคียง';
+        }
+
+        function openEditProductModal(prodId) {
+            currentEditingImageBase64 = '';
+            const modal = document.getElementById('edit-product-modal');
+            // Reset Makro fetch box
+            const mQuery = document.getElementById('makro-search-query');
+            const mStatus = document.getElementById('makro-fetch-status');
+            const mResults = document.getElementById('makro-search-results-box');
+            if (mResults) mResults.classList.add('hidden');
+            if (mStatus) mStatus.innerHTML = navigator.onLine ? 'เชื่อมต่อเน็ตเพื่อดึงข้อมูล' : '<span class="text-rose-500">⚠️ ออฟไลน์ (กรอกข้อมูลเองด้านล่างได้)</span>';
+
+            const title = document.getElementById('edit-product-title');
+            const preview = document.getElementById('edit-img-preview');
+            const placeholder = document.getElementById('edit-img-placeholder');
+            document.getElementById('edit-prod-file').value = '';
+
+            if (prodId) {
+                const p = state.products.find(x => x.id === prodId);
+                if (!p) return;
+                title.textContent = 'แก้ไขข้อมูลสินค้า';
+                document.getElementById('edit-prod-id').value = p.id;
+                document.getElementById('edit-prod-name').value = p.name || '';
+                document.getElementById('edit-prod-category').value = p.category || 'ขนม';
+                document.getElementById('edit-prod-unit').value = p.unit || 'Pack';
+                document.getElementById('edit-prod-code').value = p.code || '';
+                document.getElementById('edit-prod-barcode').value = p.barcode || '';
+                document.getElementById('edit-prod-cost').value = p.cost || '';
+                document.getElementById('edit-prod-unit-cost').value = p.unitCost || '';
+                document.getElementById('edit-prod-price').value = p.price || '';
+
+                const imgSrc = p.imageThumb || p.image || '';
+                if (imgSrc) {
+                    preview.src = imgSrc;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                } else {
+                    preview.src = '';
+                    preview.classList.add('hidden');
+                    placeholder.classList.remove('hidden');
+                }
+            } else {
+                title.textContent = 'เพิ่มสินค้าใหม่';
+                document.getElementById('edit-prod-id').value = '';
+                document.getElementById('edit-prod-name').value = '';
+                document.getElementById('edit-prod-category').value = 'ขนม';
+                document.getElementById('edit-prod-unit').value = 'Pack';
+                document.getElementById('edit-prod-code').value = '';
+                document.getElementById('edit-prod-barcode').value = '';
+                document.getElementById('edit-prod-cost').value = '';
+                document.getElementById('edit-prod-unit-cost').value = '';
+                document.getElementById('edit-prod-price').value = '';
+                preview.src = '';
+                preview.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeEditProductModal() {
+            document.getElementById('edit-product-modal').classList.add('hidden');
+        }
+
+        // Handle Image Resize to WebP base64 via Canvas
+        function handleProductImageFile(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const maxDim = 220;
+                    let w = img.width;
+                    let h = img.height;
+
+                    if (w > h) {
+                        if (w > maxDim) {
+                            h = Math.round(h * (maxDim / w));
+                            w = maxDim;
+                        }
+                    } else {
+                        if (h > maxDim) {
+                            w = Math.round(w * (maxDim / h));
+                            h = maxDim;
+                        }
+                    }
+
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+
+                    const webpData = canvas.toDataURL('image/webp', 0.8);
+                    currentEditingImageBase64 = webpData;
+
+                    const preview = document.getElementById('edit-img-preview');
+                    const placeholder = document.getElementById('edit-img-placeholder');
+                    preview.src = webpData;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveProductForm(e) {
+            e.preventDefault();
+            const idVal = document.getElementById('edit-prod-id').value;
+            const name = document.getElementById('edit-prod-name').value.trim();
+            const category = document.getElementById('edit-prod-category').value;
+            const unit = document.getElementById('edit-prod-unit').value.trim() || 'Pack';
+            const code = document.getElementById('edit-prod-code').value.trim();
+            const barcode = document.getElementById('edit-prod-barcode').value.trim();
+            const cost = parseFloat(document.getElementById('edit-prod-cost').value) || 0;
+            const unitCost = parseFloat(document.getElementById('edit-prod-unit-cost').value) || 0;
+            const price = parseFloat(document.getElementById('edit-prod-price').value) || 0;
+
+            if (!name) {
+                showToast('กรุณาระบุชื่อสินค้า', 'error');
+                return;
+            }
+
+            if (idVal) {
+                // Edit existing
+                const id = parseInt(idVal);
+                const p = state.products.find(x => x.id === id);
+                if (p) {
+                    p.name = name;
+                    p.category = category;
+                    p.unit = unit;
+                    p.code = code;
+                    p.barcode = barcode;
+                    p.cost = cost;
+                    p.unitCost = unitCost;
+                    p.price = price;
+                    if (currentEditingImageBase64) {
+                        p.imageThumb = currentEditingImageBase64;
+                    }
+                    showToast('แก้ไขข้อมูลสินค้าเรียบร้อยแล้ว', 'success');
+                    recordAction('edit_product', `แก้ไขสินค้า: ${name}`, `รหัส #${code || id} | ราคาส่ง ฿${cost.toFixed(2)} | ราคาขาย ฿${price.toFixed(2)}`, { id, name, code, cost, price }, state.products);
+                }
+            } else {
+                // Add new
+                const maxId = state.products.reduce((max, p) => Math.max(max, p.id || 0), 0);
+                const newProduct = {
+                    id: maxId + 1,
+                    code: code,
+                    barcode: barcode,
+                    name: name,
+                    category: category,
+                    unit: unit,
+                    cost: cost,
+                    unitCost: unitCost,
+                    price: price,
+                    image: '',
+                    imageThumb: currentEditingImageBase64
+                };
+                state.products.unshift(newProduct);
+                showToast('เพิ่มสินค้าใหม่เรียบร้อยแล้ว', 'success');
+                recordAction('add_product', `เพิ่มสินค้าใหม่: ${name}`, `รหัส #${code || newProduct.id} | ราคาส่ง ฿${cost.toFixed(2)} | หมวด ${category}`, { product: newProduct }, state.products);
+            }
+
+            saveProductsToStorage();
+            closeEditProductModal();
+            renderCatalog();
+            renderMgmtTable();
+            updateSummaryUI();
+        }
+
+        function deleteProductConfirm(prodId) {
+            const p = state.products.find(x => x.id === prodId);
+            if (!p) return;
+
+            if (confirm(`คุณต้องการลบสินค้า '${p.name}' ใช่หรือไม่?`)) {
+                state.products = state.products.filter(x => x.id !== prodId);
+                delete state.cart[prodId];
+                saveProductsToStorage();
+                recordAction('delete_product', `ลบสินค้า: ${p.name}`, `รหัส #${p.code || prodId} | หมวด: ${p.category}`, { id: prodId, name: p.name }, state.products);
+                saveCartToStorage();
+                renderCatalog();
+                renderMgmtTable();
+                updateSummaryUI();
+                showToast('ลบสินค้าเรียบร้อยแล้ว', 'info');
+            }
+        }
+
+        // Online & Cloud Modal
+        function openCloudModal() {
+            document.getElementById('online-modal').classList.remove('hidden');
+        }
+
+        function closeCloudModal() {
+            document.getElementById('online-modal').classList.add('hidden');
+        }
+
+        // Print Functions
+        function prepareAndPrint() {
+            const orderedCount = Object.keys(state.cart).filter(id => state.cart[id] > 0).length;
+            if (orderedCount === 0) {
+                showToast('ยังไม่มีรายการที่เลือกสั่ง กรุณาเลือกสินค้าก่อนพิมพ์', 'info');
+                return;
+            }
+            document.getElementById('print-control-modal').classList.remove('hidden');
+        }
+
+        function closePrintControlModal() {
+            document.getElementById('print-control-modal').classList.add('hidden');
+        }
+
+        function executePrint() {
+            state.printFilter = document.getElementById('print-filter-select').value;
+            state.printWithImages = document.getElementById('print-toggle-images').checked;
+            state.printWithPrices = document.getElementById('print-toggle-price').checked;
+            closePrintControlModal();
+            generatePrintDOM();
+            setTimeout(() => {
+                window.print();
+            }, 200);
+        }
+
+        // Export Print Area As Image (PNG) via html2canvas
+        function exportPrintAsImage() {
+            state.printFilter = document.getElementById('print-filter-select').value;
+            state.printWithImages = document.getElementById('print-toggle-images').checked;
+            state.printWithPrices = document.getElementById('print-toggle-price').checked;
+            
+            const btn = document.getElementById('btn-export-image');
+            const originalBtnHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังสร้างรูปภาพ...';
+            btn.disabled = true;
+
+            generatePrintDOM();
+            const printArea = document.getElementById('print-area');
+            printArea.style.display = 'block';
+            printArea.style.position = 'fixed';
+            printArea.style.left = '0';
+            printArea.style.top = '0';
+            printArea.style.width = '794px'; // Standard A4 width at 96 DPI
+            printArea.style.backgroundColor = '#ffffff';
+            printArea.style.zIndex = '9999';
+
+            setTimeout(() => {
+                html2canvas(printArea, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    windowWidth: 794
+                }).then(canvas => {
+                    printArea.style.display = 'none';
+                    printArea.style.position = 'static';
+                    printArea.style.zIndex = 'auto';
+                    btn.innerHTML = originalBtnHtml;
+                    btn.disabled = false;
+                    closePrintControlModal();
+
+                    const link = document.createElement('a');
+                    const dateStr = new Date().toISOString().slice(0, 10);
+                    link.download = `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${dateStr}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    showToast('บันทึกเป็นรูปภาพเรียบร้อยแล้ว!', 'success');
+                }).catch(err => {
+                    printArea.style.display = 'none';
+                    btn.innerHTML = originalBtnHtml;
+                    btn.disabled = false;
+                    showToast('เกิดข้อผิดพลาดในการสร้างรูปภาพ: ' + err.message, 'error');
+                });
+            }, 300);
+        }
+
+        // Generate Print DOM (Supports Show/Hide Price & NO Signatures)
+        function generatePrintDOM() {
+            const printArea = document.getElementById('print-area');
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+            let targetItems = state.products.filter(p => state.cart[p.id] > 0);
+            if (state.printFilter !== 'all') {
+                targetItems = targetItems.filter(p => p.category === state.printFilter);
+            }
+
+            const categories = state.printFilter === 'all' 
+                ? ['ขนม', 'เครื่องดื่ม', 'เครื่องปรุง-ทั่วไป']
+                : [state.printFilter];
+
+            let grandTotalCost = 0;
+            let grandTotalUnits = 0;
+            let grandItemCount = 0;
+
+            let sectionsHtml = '';
+            const showPrice = state.printWithPrices;
+            const totalCols = (state.printWithImages ? 5 : 4) + (showPrice ? 2 : 0);
+
+            categories.forEach(cat => {
+                const catItems = targetItems.filter(p => p.category === cat);
+                if (catItems.length === 0) return;
+
+                let catTotalCost = 0;
+                let catTotalUnits = 0;
+
+                const rowsHtml = catItems.map((p) => {
+                    const qty = state.cart[p.id];
+                    const lineCost = qty * p.cost;
+                    catTotalCost += lineCost;
+                    catTotalUnits += qty;
+                    grandItemCount += 1;
+                    const imgSrc = p.imageThumb || p.image || '';
+
+                    return `
+                    <tr class="page-break-avoid">
+                        <td style="text-align: center; width: 32px;">${grandItemCount}</td>
+                        <td style="font-family: monospace; font-weight: bold; width: 68px;">${p.code || '-'}</td>
+                        ${state.printWithImages ? `
+                            <td style="text-align: center; width: 42px; padding: 2px;">
+                                ${imgSrc ? `<img src="${imgSrc}" style="width: 38px; height: 38px; object-fit: contain; margin: 0 auto;">` : ''}
+                            </td>
+                        ` : ''}
+                        <td style="line-height: 1.25;">
+                            <span style="font-weight: 600;">${escapeHtml(p.name)}</span>
+                            ${p.barcode ? `<div style="font-size: 8pt; color: #555; font-family: monospace;">Barcode: ${p.barcode}</div>` : ''}
+                        </td>
+                        <td style="text-align: center; font-weight: bold; width: 48px; font-size: 10.5pt;">${qty}</td>
+                        <td style="text-align: center; width: 48px;">${p.unit}</td>
+                        ${showPrice ? `
+                            <td style="text-align: right; width: 68px;">${p.cost.toFixed(2)}</td>
+                            <td style="text-align: right; font-weight: bold; width: 78px;">${lineCost.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        ` : ''}
+                    </tr>
+                    `;
+                }).join('');
+
+                grandTotalCost += catTotalCost;
+                grandTotalUnits += catTotalUnits;
+
+                const subtotalText = showPrice 
+                    ? `หมวด${cat} (สั่ง ${catItems.length} รายการ, ${catTotalUnits} หน่วย - รวม ฿${catTotalCost.toLocaleString('en-US', {minimumFractionDigits: 2})})`
+                    : `หมวด${cat} (สั่ง ${catItems.length} รายการ, รวม ${catTotalUnits} หน่วย)`;
+
+                sectionsHtml += `
+                    <tr style="background-color: #bdd7ee; font-weight: bold; color: #1f4e79;">
+                        <td colspan="${totalCols}" style="padding: 4px 8px; font-size: 10.5pt;">
+                            ${subtotalText}
+                        </td>
+                    </tr>
+                    ${rowsHtml}
+                `;
+            });
+
+            printArea.innerHTML = `
+                <div style="font-family: 'Prompt', 'TH SarabunPSK', sans-serif; color: #000; width: 100%; padding: 12px; background: #fff;">
+                    <!-- OFFICIAL SCHOOL COOP HEADER -->
+                    <div style="background-color: #1f4e79; color: #fff; text-align: center; font-weight: bold; font-size: 15pt; padding: 5px 0; border: 1px solid #1f4e79;">
+                        รายการสั่งของ สหกรณ์โรงเรียนบ้านน้ำพร (Makro)
+                    </div>
+                    <div style="background-color: #ddebf7; color: #1f4e79; text-align: center; font-weight: bold; font-size: 11pt; padding: 3px 0; border-left: 1px solid #1f4e79; border-right: 1px solid #1f4e79;">
+                        115 หมู่ 2 ต.ปากตม อ.เชียงคาน จ.เลย 42110
+                    </div>
+                    <div style="background-color: #ddebf7; color: #1f4e79; text-align: center; font-size: 9.5pt; padding: 2px 0; border-left: 1px solid #1f4e79; border-right: 1px solid #1f4e79;">
+                        ติดต่อ ครูนิรุทธิ์ เสวะนา 081-8713581 ครูสุภาพร พิมพุธ 093-4676466
+                    </div>
+                    <div style="background-color: #ddebf7; color: #1f4e79; text-align: center; font-size: 9.5pt; padding: 2px 0; border-left: 1px solid #1f4e79; border-right: 1px solid #1f4e79;">
+                        ผู้อำนวยการโรงเรียน นางศิวาลัย แก้วเขียว 062-5461959
+                    </div>
+                    <div style="background-color: #f2f2f2; color: #555; text-align: center; font-style: italic; font-size: 8.5pt; padding: 2px 0; border: 1px solid #ccc; margin-bottom: 6px;">
+                        อัปเดตล่าสุด: ${dateStr} เวลา ${timeStr}
+                    </div>
+
+                    <!-- TABLE -->
+                    <table class="print-table" style="width: 100%; border-collapse: collapse; font-size: 9pt;">
+                        <thead>
+                            <tr style="background-color: #e2e8f0; text-align: center; font-weight: bold;">
+                                <th style="width: 32px;">ที่</th>
+                                <th style="width: 68px;">รหัส Makro</th>
+                                ${state.printWithImages ? '<th style="width: 42px;">รูป</th>' : ''}
+                                <th>ชื่อสินค้า / รายการ</th>
+                                <th style="width: 48px;">จำนวน</th>
+                                <th style="width: 48px;">หน่วย</th>
+                                ${showPrice ? `
+                                    <th style="width: 68px;">ราคาส่ง</th>
+                                    <th style="width: 78px;">รวมเงิน (บาท)</th>
+                                ` : ''}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sectionsHtml}
+                            <tr style="background-color: #f1f5f9; font-weight: bold; font-size: 10pt; border-top: 2px solid #000;">
+                                <td colspan="${state.printWithImages ? 4 : 3}" style="text-align: center; padding: 6px;">
+                                    รวมทั้งสิ้น (${grandItemCount} รายการ / ${grandTotalUnits} หน่วย)
+                                </td>
+                                <td style="text-align: center; font-size: 10.5pt; color: #000;">${grandTotalUnits}</td>
+                                <td style="text-align: center;">หน่วย</td>
+                                ${showPrice ? `
+                                    <td style="text-align: right;">ยอดรวม:</td>
+                                    <td style="text-align: right; font-size: 10.5pt; color: #be123c;">฿${grandTotalCost.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                                ` : ''}
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- NOTE: Signatures removed per user request -->
+                </div>
+            `;
+        }
+
+        // Toast Helper
+        let toastTimer;
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = msg;
+            if (type === 'success') {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-base';
+            } else if (type === 'info') {
+                toastIcon.className = 'fa-solid fa-circle-info text-sky-400 text-base';
+            } else {
+                toastIcon.className = 'fa-solid fa-triangle-exclamation text-amber-400 text-base';
+            }
+
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-150%]', 'opacity-0');
+            }, 2600);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>"']/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# Dependencies and Mobile Builds
+node_modules/
+ios_project/
+Program/
+online_deploy/
+outputs/
+icon_options/
+netlify/
+netlify.toml
+"Wall's Menu"/
+"สั่งของ"/
+
+# Large School Excel Files & Private Documents
+*.xlsx
+*.xlsm
+*.pptx
+*.docx
+*.pdf
+*.csv
+*.jpg
+*.bas
+*.bat
+mobile_qr.png
+รายรับรายจ่าย.html
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Local Environment
+.env
+.env.local
+.vercel
+
+# System / OS
+.DS_Store
+Thumbs.db
