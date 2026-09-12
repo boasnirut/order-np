@@ -1,4 +1,4 @@
-const CACHE_NAME = 'coop-makro-v8';
+const CACHE_NAME = 'coop-makro-v9';
 const ASSETS_TO_CACHE = [
   './',
   './manifest.json',

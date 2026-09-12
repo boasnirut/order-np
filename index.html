@@ -7,7 +7,7 @@
     <!-- Google Fonts: Prompt -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS -->
@@ -64,7 +64,52 @@
 
         @page {
             size: A4 portrait;
-            margin: 8mm 10mm 8mm 10mm;
+            margin: 0;
+        }
+
+        /* A4 SHEET SPECIFICATIONS & CRISP GRID LINES */
+        .a4-page-sheet {
+            width: 794px;
+            height: 1123px;
+            min-height: 1123px;
+            max-height: 1123px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: #0f172a;
+            padding: 22px 26px 18px 26px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: 'Sarabun', 'Prompt', 'TH Sarabun New', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .a4-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Sarabun', 'Prompt', 'TH Sarabun New', sans-serif;
+            font-size: 9pt;
+            line-height: 1.55;
+            box-sizing: border-box;
+        }
+
+        .a4-table th, .a4-table td {
+            border: 1px solid #94a3b8 !important;
+            padding: 5px 6px !important;
+            vertical-align: middle !important;
+            box-sizing: border-box;
+        }
+
+        .a4-table th {
+            background-color: #f1f5f9 !important;
+            color: #1e293b !important;
+            font-weight: 700 !important;
+            text-align: center !important;
+            padding-top: 7px !important;
+            padding-bottom: 7px !important;
+            line-height: 1.5 !important;
         }
 
         @media print {
@@ -76,7 +121,7 @@
                 background: white !important;
                 color: #000 !important;
                 font-size: 9.5pt !important;
-                line-height: 1.25 !important;
+                line-height: 1.5 !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 width: 100% !important;
@@ -92,13 +137,30 @@
                 padding: 0 !important;
             }
 
+            .a4-page-sheet {
+                width: 100% !important;
+                height: 100vh !important;
+                min-height: 100vh !important;
+                max-height: none !important;
+                padding: 10mm 12mm !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .a4-page-sheet:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+
             .page-break-avoid {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
 
-            .print-table th, .print-table td {
-                border: 1px solid #94a3b8 !important;
+            .a4-table th, .a4-table td {
+                border: 1px solid #64748b !important;
                 padding: 4px 6px !important;
             }
         }
@@ -505,19 +567,19 @@
         </div>
     </div>
 
-    <!-- ORDER IMAGE PREVIEW & SHARE MODAL (MOBILE-OPTIMIZED) -->
-    <div id="order-image-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-3 sm:p-4">
-        <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="closeOrderImageModal()"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] flex flex-col z-10 overflow-hidden">
+    <!-- ORDER IMAGE PREVIEW & SHARE MODAL (A4 MULTI-PAGE OPTIMIZED) -->
+    <div id="order-image-modal" class="fixed inset-0 z-50 hidden no-print flex items-center justify-center p-2 sm:p-4">
+        <div class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm" onclick="closeOrderImageModal()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[95vh] flex flex-col z-10 overflow-hidden">
             <!-- Header -->
-            <div class="flex items-center justify-between p-3.5 sm:p-4 border-b border-slate-100 shrink-0">
+            <div class="flex items-center justify-between p-3 sm:p-4 border-b border-slate-100 shrink-0">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                        <i class="fa-solid fa-file-image"></i>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shadow-xs">
+                        <i class="fa-solid fa-file-invoice"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold text-slate-900">ใบสั่งของพร้อมใช้งาน</h3>
-                        <p class="text-xs text-slate-500">บันทึกรูปภาพหรือแชร์ส่งต่อได้ทันที</p>
+                        <h3 class="text-sm font-bold text-slate-900">ใบสั่งของ Makro (ขนาด A4)</h3>
+                        <p class="text-[11px] text-slate-500" id="order-page-info">ขนาด A4 มาตรฐาน พร้อมเส้นตารางคมชัด</p>
                     </div>
                 </div>
                 <button onclick="closeOrderImageModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg transition">
@@ -525,32 +587,46 @@
                 </button>
             </div>
 
+            <!-- Page Tabs (Visible if multi-page) -->
+            <div id="order-page-tabs" class="hidden flex items-center gap-1.5 px-3 py-2 bg-slate-100 border-b border-slate-200 overflow-x-auto shrink-0 justify-center">
+            </div>
+
             <!-- Mobile Instructions Banner -->
-            <div class="bg-amber-50 border-b border-amber-200/70 px-3.5 py-2.5 text-xs text-amber-800 flex items-start gap-2 shrink-0">
-                <i class="fa-solid fa-circle-info text-amber-600 text-sm shrink-0 mt-0.5"></i>
-                <div class="leading-relaxed">
-                    <strong>บนมือถือ:</strong> แตะปุ่ม <strong>"แชร์ / ส่ง LINE"</strong> หรือ <strong>กดค้างที่รูปภาพ</strong> เพื่อเลือก "บันทึกไปยัง 'รูปภาพ'" (Save to Photos) ได้ทันที
+            <div class="bg-amber-50 border-b border-amber-200/70 px-3.5 py-2 text-xs text-amber-800 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-amber-600 text-sm shrink-0"></i>
+                    <span><strong>บนมือถือ:</strong> แตะปุ่ม <strong>"แชร์ / ส่ง LINE"</strong> หรือ <strong>กดค้างที่รูปภาพ</strong> เพื่อบันทึก</span>
                 </div>
             </div>
 
-            <!-- Image Scroll Container -->
-            <div class="flex-1 overflow-y-auto p-3 bg-slate-100/90 text-center flex items-center justify-center custom-scrollbar">
+            <!-- Image Scroll Container with Nav Arrows -->
+            <div class="relative flex-1 overflow-y-auto p-3 bg-slate-100/90 text-center flex items-center justify-center custom-scrollbar min-h-[300px]">
+                <button type="button" id="btn-prev-page" onclick="switchOrderImagePage(currentOrderPageIndex - 1)" class="hidden absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/90 text-slate-800 shadow-lg border border-slate-200 hover:bg-white z-10 transition">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </button>
                 <img id="order-preview-img" src="" alt="ใบสั่งของ Makro สหกรณ์บ้านน้ำพร" class="max-w-full h-auto rounded-lg shadow-md border border-slate-300 select-all" style="-webkit-touch-callout: default; -webkit-user-select: auto;">
+                <button type="button" id="btn-next-page" onclick="switchOrderImagePage(currentOrderPageIndex + 1)" class="hidden absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/90 text-slate-800 shadow-lg border border-slate-200 hover:bg-white z-10 transition">
+                    <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
             </div>
 
             <!-- Action Buttons Footer -->
             <div class="p-3.5 bg-white border-t border-slate-100 shrink-0 space-y-2">
                 <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="shareOrderImage()" class="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
+                    <button type="button" onclick="shareAllOrderPages()" class="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
                         <i class="fa-solid fa-share-nodes text-base"></i>
-                        <span>แชร์ / ส่ง LINE</span>
+                        <span id="btn-share-label">แชร์ / ส่ง LINE</span>
                     </button>
-                    <button type="button" onclick="downloadOrderImageFile()" class="px-3 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
+                    <button type="button" onclick="downloadCurrentOrderPage()" class="px-3 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
                         <i class="fa-solid fa-download text-base"></i>
-                        <span>ดาวน์โหลดรูป</span>
+                        <span>ดาวน์โหลดหน้านี้</span>
                     </button>
                 </div>
-                <button type="button" onclick="closeOrderImageModal()" class="w-full py-1.5 text-center text-slate-400 hover:text-slate-600 text-xs font-medium transition">
+                <button type="button" id="btn-download-all-pages" onclick="downloadAllOrderPages()" class="hidden w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-images text-slate-500"></i>
+                    <span>ดาวน์โหลดทุกหน้าลงเครื่อง</span>
+                </button>
+                <button type="button" onclick="closeOrderImageModal()" class="w-full py-1 text-center text-slate-400 hover:text-slate-600 text-xs font-medium transition">
                     ปิดหน้าต่าง
                 </button>
             </div>
@@ -3064,15 +3140,15 @@
             document.getElementById('print-control-modal').classList.add('hidden');
         }
 
-        // Order Image State for Mobile Export & Web Share
-        let currentOrderImageBlob = null;
-        let currentOrderImageFilename = '';
-        let currentOrderImageDataUrl = '';
+        // Order Image State for A4 Multi-Page Export & Web Share
+        let currentOrderPages = []; // Array of { pageNum, totalPages, dataUrl, blob, filename }
+        let currentOrderPageIndex = 0;
 
-        function openOrderImageModal(dataUrl) {
+        function openOrderImageModal(pages) {
+            currentOrderPages = pages || [];
+            currentOrderPageIndex = 0;
             const modal = document.getElementById('order-image-modal');
-            const imgEl = document.getElementById('order-preview-img');
-            if (imgEl) imgEl.src = dataUrl;
+            renderOrderImagePreview();
             if (modal) modal.classList.remove('hidden');
         }
 
@@ -3081,53 +3157,138 @@
             if (modal) modal.classList.add('hidden');
         }
 
-        async function shareOrderImage() {
-            if (!currentOrderImageBlob) {
-                showToast('ไม่พบข้อมูลรูปภาพใบสั่งของ', 'error');
+        function switchOrderImagePage(index) {
+            if (index < 0 || index >= currentOrderPages.length) return;
+            currentOrderPageIndex = index;
+            renderOrderImagePreview();
+        }
+
+        function renderOrderImagePreview() {
+            if (currentOrderPages.length === 0) return;
+            const cur = currentOrderPages[currentOrderPageIndex];
+            const imgEl = document.getElementById('order-preview-img');
+            if (imgEl) imgEl.src = cur.dataUrl;
+
+            // Page info label
+            const pageInfo = document.getElementById('order-page-info');
+            if (pageInfo) {
+                if (cur.totalPages > 1) {
+                    pageInfo.textContent = `หน้า ${cur.pageNum} จาก ${cur.totalPages} (ขนาด A4 พร้อมเส้นตาราง)`;
+                } else {
+                    pageInfo.textContent = `ขนาด A4 มาตรฐาน (1 หน้าครบถ้วน พร้อมเส้นตาราง)`;
+                }
+            }
+
+            // Page Tabs
+            const tabsContainer = document.getElementById('order-page-tabs');
+            if (tabsContainer) {
+                if (cur.totalPages > 1) {
+                    tabsContainer.classList.remove('hidden');
+                    tabsContainer.innerHTML = currentOrderPages.map((p, idx) => `
+                        <button type="button" onclick="switchOrderImagePage(${idx})" class="px-3 py-1 rounded-xl text-xs font-bold transition ${idx === currentOrderPageIndex ? 'bg-emerald-600 text-white shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}">
+                            หน้า ${p.pageNum}/${p.totalPages}
+                        </button>
+                    `).join('');
+                } else {
+                    tabsContainer.classList.add('hidden');
+                }
+            }
+
+            // Nav buttons
+            const btnPrev = document.getElementById('btn-prev-page');
+            const btnNext = document.getElementById('btn-next-page');
+            if (btnPrev && btnNext) {
+                if (cur.totalPages > 1) {
+                    btnPrev.classList.remove('hidden');
+                    btnNext.classList.remove('hidden');
+                    btnPrev.disabled = currentOrderPageIndex === 0;
+                    btnNext.disabled = currentOrderPageIndex === cur.totalPages - 1;
+                    btnPrev.className = `absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/90 text-slate-800 shadow-lg border border-slate-200 text-xs ${currentOrderPageIndex === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white active:scale-95'}`;
+                    btnNext.className = `absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/90 text-slate-800 shadow-lg border border-slate-200 text-xs ${currentOrderPageIndex === cur.totalPages - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white active:scale-95'}`;
+                } else {
+                    btnPrev.classList.add('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            }
+
+            // Update Share & Download Buttons
+            const shareLabel = document.getElementById('btn-share-label');
+            if (shareLabel) {
+                if (cur.totalPages > 1) {
+                    shareLabel.textContent = `แชร์ทุกหน้า (${cur.totalPages} หน้า)`;
+                } else {
+                    shareLabel.textContent = 'แชร์ / ส่ง LINE';
+                }
+            }
+
+            const btnDownloadAll = document.getElementById('btn-download-all-pages');
+            if (btnDownloadAll) {
+                if (cur.totalPages > 1) {
+                    btnDownloadAll.classList.remove('hidden');
+                } else {
+                    btnDownloadAll.classList.add('hidden');
+                }
+            }
+        }
+
+        async function shareAllOrderPages() {
+            if (currentOrderPages.length === 0) {
+                showToast('ไม่พบไฟล์รูปภาพใบสั่งของ', 'error');
                 return;
             }
-            const file = new File([currentOrderImageBlob], currentOrderImageFilename || 'ใบสั่งของ_Makro.png', { type: 'image/png' });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+
+            const files = currentOrderPages.map(p => new File([p.blob], p.filename, { type: 'image/png' }));
+            
+            if (navigator.canShare && navigator.canShare({ files })) {
                 try {
                     await navigator.share({
                         title: 'ใบสั่งของ Makro - สหกรณ์โรงเรียนบ้านน้ำพร',
-                        text: 'ใบสั่งของ Makro สหกรณ์โรงเรียนบ้านน้ำพร',
-                        files: [file]
+                        text: `ใบสั่งของ Makro สหกรณ์โรงเรียนบ้านน้ำพร (รวม ${currentOrderPages.length} หน้า)`,
+                        files: files
                     });
-                    showToast('แชร์ใบสั่งของเรียบร้อย', 'success');
+                    showToast(`แชร์ใบสั่งของ ${currentOrderPages.length} หน้าเรียบร้อย`, 'success');
                 } catch (err) {
                     if (err.name !== 'AbortError') {
                         showToast('การแชร์ไม่สำเร็จ: ' + err.message, 'error');
                     }
                 }
             } else {
-                downloadOrderImageFile();
-                showToast('อุปกรณ์นี้ไม่รองรับ Web Share API โดยตรง ระบบได้ดาวน์โหลดไฟล์ให้แล้ว หรือสามารถกดค้างที่รูปภาพเพื่อบันทึกได้ครับ', 'info');
+                downloadCurrentOrderPage();
+                showToast('อุปกรณ์ไม่รองรับการแชร์หลายไฟล์พร้อมกัน ระบบได้ดาวน์โหลดไฟล์ให้แล้ว หรือกดค้างที่รูปภาพเพื่อบันทึก', 'info');
             }
         }
 
-        function downloadOrderImageFile() {
-            if (!currentOrderImageDataUrl && !currentOrderImageBlob) {
-                showToast('ไม่พบข้อมูลรูปภาพ', 'error');
-                return;
+        function downloadCurrentOrderPage() {
+            if (currentOrderPages.length === 0) return;
+            const cur = currentOrderPages[currentOrderPageIndex];
+            triggerFileDownload(cur.blob, cur.filename);
+            showToast(`เริ่มดาวน์โหลด ${cur.filename} แล้ว`, 'success');
+        }
+
+        async function downloadAllOrderPages() {
+            if (currentOrderPages.length === 0) return;
+            for (let i = 0; i < currentOrderPages.length; i++) {
+                const p = currentOrderPages[i];
+                triggerFileDownload(p.blob, p.filename);
+                await new Promise(r => setTimeout(r, 450));
             }
+            showToast(`ดาวน์โหลดใบสั่งของครบทั้ง ${currentOrderPages.length} หน้าแล้ว`, 'success');
+        }
+
+        function triggerFileDownload(blob, filename) {
             try {
                 const link = document.createElement('a');
-                link.download = currentOrderImageFilename || `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${new Date().toISOString().slice(0, 10)}.png`;
-                if (currentOrderImageBlob) {
-                    link.href = URL.createObjectURL(currentOrderImageBlob);
-                } else {
-                    link.href = currentOrderImageDataUrl;
-                }
+                link.download = filename;
+                const url = URL.createObjectURL(blob);
+                link.href = url;
                 document.body.appendChild(link);
                 link.click();
                 setTimeout(() => {
                     document.body.removeChild(link);
-                    if (currentOrderImageBlob) URL.revokeObjectURL(link.href);
-                }, 1200);
-                showToast('เริ่มดาวน์โหลดรูปภาพแล้ว (บนมือถือกดค้างที่รูปเพื่อบันทึกลงแกลเลอรีได้)', 'success');
+                    URL.revokeObjectURL(url);
+                }, 1500);
             } catch (e) {
-                showToast('กรุณากดค้างที่รูปภาพเพื่อบันทึกลงมือถือ', 'info');
+                showToast('กรุณากดค้างที่รูปภาพเพื่อบันทึกลงเครื่อง', 'info');
             }
         }
 
@@ -3136,13 +3297,11 @@
             state.printWithImages = document.getElementById('print-toggle-images').checked;
             state.printWithPrices = document.getElementById('print-toggle-price').checked;
             
-            // Check if running in iOS standalone PWA
             const isIosStandalone = window.navigator.standalone === true || (window.matchMedia('(display-mode: standalone)').matches && /iphone|ipad|ipod/i.test(navigator.userAgent));
             
             if (isIosStandalone) {
-                // window.print() is disabled by iOS WebKit in standalone PWA mode
                 closePrintControlModal();
-                showToast('บนแอปมือถือ (iOS PWA) ระบบได้เปิด "บันทึกเป็นรูปภาพ/แชร์" ให้โดยอัตโนมัติ เพื่อให้บันทึกหรือพิมพ์ได้สะดวกครับ', 'info');
+                showToast('บนแอปมือถือ (iOS PWA) ระบบได้เปิด "บันทึกเป็นรูปภาพ A4/แชร์" ให้โดยอัตโนมัติ เพื่อให้บันทึกหรือพิมพ์ได้สะดวกครับ', 'info');
                 setTimeout(() => {
                     exportPrintAsImage();
                 }, 300);
@@ -3194,7 +3353,7 @@
             }
         }
 
-        // Export Print Area As Image (PNG) via html2canvas (Rock-Solid for Mobile & Desktop)
+        // Export Print Area As Image (PNG) - Strict A4 Size with Multi-Page Support
         async function exportPrintAsImage() {
             state.printFilter = document.getElementById('print-filter-select').value;
             state.printWithImages = document.getElementById('print-toggle-images').checked;
@@ -3203,7 +3362,7 @@
             const btn = document.getElementById('btn-export-image');
             const originalBtnHtml = btn ? btn.innerHTML : '';
             if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังสร้างรูปภาพใบสั่งของ...';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังเตรียมหน้าเอกสาร A4...';
                 btn.disabled = true;
             }
 
@@ -3213,73 +3372,95 @@
             printArea.style.position = 'fixed';
             printArea.style.left = '0';
             printArea.style.top = '0';
-            printArea.style.width = '794px'; // Standard A4 width at 96 DPI
-            printArea.style.backgroundColor = '#ffffff';
             printArea.style.zIndex = '9999';
 
-            // Allow layout rendering
-            await new Promise(r => setTimeout(r, 260));
+            const pageSheets = Array.from(printArea.querySelectorAll('.a4-page-sheet'));
+            const totalPages = pageSheets.length;
+            const now = new Date();
+            const dStr = now.toISOString().slice(0, 10);
+            const renderedPages = [];
+
+            // Wait for DOM & font metrics rendering
+            await new Promise(r => setTimeout(r, 280));
 
             try {
-                let canvas;
-                try {
-                    // First attempt: with images and CORS handling
-                    canvas = await html2canvas(printArea, {
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: false,
-                        backgroundColor: '#ffffff',
-                        windowWidth: 794,
-                        imageTimeout: 5000,
-                        logging: false
+                for (let i = 0; i < totalPages; i++) {
+                    const sheet = pageSheets[i];
+                    if (btn) {
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังเรนเดอร์หน้า ${i + 1} จาก ${totalPages}...`;
+                    }
+
+                    // Isolate active page sheet
+                    pageSheets.forEach((p, idx) => {
+                        p.style.display = (idx === i) ? 'flex' : 'none';
                     });
-                } catch (canvasErr) {
-                    console.warn('html2canvas first attempt failed, retrying without external images:', canvasErr);
-                    // Safe fallback: temporarily hide images if cross-origin image tainted canvas
-                    const imgs = printArea.querySelectorAll('img');
-                    imgs.forEach(i => i.style.display = 'none');
-                    canvas = await html2canvas(printArea, {
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: false,
-                        backgroundColor: '#ffffff',
-                        windowWidth: 794,
-                        logging: false
+
+                    let canvas;
+                    try {
+                        canvas = await html2canvas(sheet, {
+                            scale: 2,
+                            useCORS: true,
+                            allowTaint: false,
+                            backgroundColor: '#ffffff',
+                            width: 794,
+                            height: 1123,
+                            windowWidth: 794,
+                            imageTimeout: 4000,
+                            logging: false
+                        });
+                    } catch (canvasErr) {
+                        console.warn('html2canvas first attempt failed, retrying without external images:', canvasErr);
+                        const imgs = sheet.querySelectorAll('img');
+                        imgs.forEach(im => im.style.display = 'none');
+                        canvas = await html2canvas(sheet, {
+                            scale: 2,
+                            useCORS: true,
+                            allowTaint: false,
+                            backgroundColor: '#ffffff',
+                            width: 794,
+                            height: 1123,
+                            windowWidth: 794,
+                            logging: false
+                        });
+                    }
+
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+                    const pNum = i + 1;
+                    const filename = totalPages === 1 
+                        ? `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${dStr}.png`
+                        : `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${dStr}_หน้า${pNum}จาก${totalPages}.png`;
+
+                    renderedPages.push({
+                        pageNum: pNum,
+                        totalPages: totalPages,
+                        dataUrl: dataUrl,
+                        blob: blob,
+                        filename: filename
                     });
                 }
 
+                // Restore display
+                pageSheets.forEach(p => p.style.display = 'flex');
                 printArea.style.display = 'none';
                 printArea.style.position = 'static';
                 printArea.style.zIndex = 'auto';
+
                 if (btn) {
                     btn.innerHTML = originalBtnHtml;
                     btn.disabled = false;
                 }
                 closePrintControlModal();
 
-                const now = new Date();
-                const dStr = now.toISOString().slice(0, 10);
-                const filename = `ใบสั่งของ_Makro_สหกรณ์บ้านน้ำพร_${dStr}.png`;
+                // Auto-record draft order to history & GitHub activity log!
+                saveOrderDraftSilently();
 
-                // Convert canvas to blob
-                canvas.toBlob((blob) => {
-                    if (!blob) {
-                        showToast('ไม่สามารถแปลงรูปภาพได้', 'error');
-                        return;
-                    }
-                    currentOrderImageBlob = blob;
-                    currentOrderImageFilename = filename;
-                    currentOrderImageDataUrl = canvas.toDataURL('image/png');
-
-                    // Auto-record draft order to history & GitHub activity log!
-                    saveOrderDraftSilently();
-
-                    // Open Preview & Share Modal
-                    openOrderImageModal(currentOrderImageDataUrl);
-                    showToast('สร้างรูปภาพใบสั่งของสำเร็จ!', 'success');
-                }, 'image/png');
+                // Open Preview & Share Modal
+                openOrderImageModal(renderedPages);
+                showToast(`สร้างรูปภาพใบสั่งของขนาด A4 สำเร็จ (${totalPages} หน้า)!`, 'success');
 
             } catch (err) {
+                pageSheets.forEach(p => p.style.display = 'flex');
                 printArea.style.display = 'none';
                 printArea.style.position = 'static';
                 printArea.style.zIndex = 'auto';
@@ -3291,7 +3472,7 @@
             }
         }
 
-        // Generate Print DOM (Supports Show/Hide Price & NO Signatures)
+        // Generate A4 Print DOM with Multi-Page Pagination, Full Grid Lines & Vowel Headroom
         function generatePrintDOM() {
             const printArea = document.getElementById('print-area');
             const now = new Date();
@@ -3303,126 +3484,200 @@
                 targetItems = targetItems.filter(p => p.category === state.printFilter);
             }
 
-            const categories = state.printFilter === 'all' 
-                ? ['ขนม', 'เครื่องดื่ม', 'เครื่องปรุง-ทั่วไป']
-                : [state.printFilter];
+            let categories;
+            if (state.printFilter === 'all') {
+                const defaultOrder = ['ขนม', 'เครื่องดื่ม', 'เครื่องปรุง-ทั่วไป'];
+                const extraCats = [...new Set(targetItems.map(p => p.category || 'ทั่วไป'))].filter(c => !defaultOrder.includes(c));
+                categories = [...defaultOrder.filter(c => targetItems.some(p => (p.category || 'ทั่วไป') === c)), ...extraCats];
+                if (categories.length === 0) categories = ['ทั่วไป'];
+            } else {
+                categories = [state.printFilter];
+            }
 
+            // Organize ordered items by category
+            const groupedItems = [];
+            categories.forEach(cat => {
+                const catItems = targetItems.filter(p => (p.category || 'ทั่วไป') === cat);
+                catItems.forEach((p, idx) => {
+                    groupedItems.push({
+                        ...p,
+                        catName: cat,
+                        isFirstInCat: idx === 0,
+                        catTotalCount: catItems.length
+                    });
+                });
+            });
+
+            // Calculate Grand Totals
             let grandTotalCost = 0;
             let grandTotalUnits = 0;
-            let grandItemCount = 0;
+            const grandItemCount = groupedItems.length;
 
-            let sectionsHtml = '';
+            groupedItems.forEach(p => {
+                const qty = state.cart[p.id] || 0;
+                grandTotalUnits += qty;
+                grandTotalCost += (qty * (p.cost || 0));
+            });
+
             const showPrice = state.printWithPrices;
             const totalCols = (state.printWithImages ? 5 : 4) + (showPrice ? 2 : 0);
 
-            categories.forEach(cat => {
-                const catItems = targetItems.filter(p => p.category === cat);
-                if (catItems.length === 0) return;
+            // Pagination Logic:
+            // Page 1: fits up to 15 items (leaving room for school header, categories, and margin)
+            // Subsequent Pages: fits up to 18 items
+            // If total items <= 16: fits on 1 page!
+            const PAGE1_MAX = 15;
+            const PAGEX_MAX = 18;
 
-                let catTotalCost = 0;
-                let catTotalUnits = 0;
+            const pages = [];
+            if (groupedItems.length <= 16) {
+                pages.push(groupedItems);
+            } else {
+                pages.push(groupedItems.slice(0, PAGE1_MAX));
+                let remaining = groupedItems.slice(PAGE1_MAX);
+                while (remaining.length > 0) {
+                    const chunk = remaining.slice(0, PAGEX_MAX);
+                    pages.push(chunk);
+                    remaining = remaining.slice(PAGEX_MAX);
+                }
+            }
 
-                const rowsHtml = catItems.map((p) => {
-                    const qty = state.cart[p.id];
-                    const lineCost = qty * p.cost;
-                    catTotalCost += lineCost;
-                    catTotalUnits += qty;
-                    grandItemCount += 1;
+            const totalPages = pages.length;
+            let runningItemIndex = 0;
+            let lastRenderedCat = '';
+
+            let pagesHtml = '';
+
+            pages.forEach((pageItems, pageIdx) => {
+                const pageNum = pageIdx + 1;
+                const isPage1 = (pageNum === 1);
+                const isLastPage = (pageNum === totalPages);
+
+                let rowsHtml = '';
+
+                pageItems.forEach((p) => {
+                    runningItemIndex += 1;
+                    const qty = state.cart[p.id] || 0;
+                    const lineCost = qty * (p.cost || 0);
                     const imgSrc = p.imageThumb || p.image || '';
 
-                    return `
-                    <tr class="page-break-avoid">
-                        <td style="text-align: center; width: 32px;">${grandItemCount}</td>
-                        <td style="font-family: monospace; font-weight: bold; width: 68px;">${p.code || '-'}</td>
-                        ${state.printWithImages ? `
-                            <td style="text-align: center; width: 42px; padding: 2px;">
-                                ${imgSrc ? `<img src="${imgSrc}" crossorigin="anonymous" onerror="this.style.display=\'none\'" style="width: 38px; height: 38px; object-fit: contain; margin: 0 auto;">` : ''}
+                    // Check if we should print category header
+                    if (p.catName !== lastRenderedCat) {
+                        const isContinuation = (lastRenderedCat === p.catName);
+                        lastRenderedCat = p.catName;
+                        rowsHtml += `
+                            <tr style="background-color: #dbeafe; font-weight: bold; color: #1e40af;">
+                                <td colspan="${totalCols}" style="padding: 5px 8px; font-size: 9.5pt; border: 1px solid #94a3b8; line-height: 1.5;">
+                                    หมวด${p.catName} ${pageIdx > 0 && !p.isFirstInCat ? '(ต่อ)' : `(${p.catTotalCount} รายการ)`}
+                                </td>
+                            </tr>
+                        `;
+                    }
+
+                    rowsHtml += `
+                        <tr style="background-color: #ffffff;">
+                            <td style="text-align: center; width: 34px; padding: 5px 4px; border: 1px solid #94a3b8; line-height: 1.5; font-size: 9pt;">${runningItemIndex}</td>
+                            <td style="font-family: monospace; font-weight: bold; width: 72px; text-align: center; padding: 5px 4px; border: 1px solid #94a3b8; line-height: 1.5; font-size: 8.5pt;">${p.code || '-'}</td>
+                            ${state.printWithImages ? `
+                                <td style="text-align: center; width: 44px; padding: 2px; border: 1px solid #94a3b8;">
+                                    ${imgSrc ? `<img src="${imgSrc}" crossorigin="anonymous" onerror="this.style.display='none'" style="width: 36px; height: 36px; object-fit: contain; margin: 0 auto; display: block;">` : ''}
+                                </td>
+                            ` : ''}
+                            <td style="line-height: 1.55; padding: 5px 8px; border: 1px solid #94a3b8; font-size: 9pt;">
+                                <div style="font-weight: 600; color: #0f172a; word-break: break-word;">${escapeHtml(p.name)}</div>
+                                ${p.barcode ? `<div style="font-size: 8pt; color: #64748b; font-family: monospace; line-height: 1.3;">Barcode: ${p.barcode}</div>` : ''}
                             </td>
-                        ` : ''}
-                        <td style="line-height: 1.25;">
-                            <span style="font-weight: 600;">${escapeHtml(p.name)}</span>
-                            ${p.barcode ? `<div style="font-size: 8pt; color: #555; font-family: monospace;">Barcode: ${p.barcode}</div>` : ''}
-                        </td>
-                        <td style="text-align: center; font-weight: bold; width: 48px; font-size: 10.5pt;">${qty}</td>
-                        <td style="text-align: center; width: 48px;">${p.unit}</td>
-                        ${showPrice ? `
-                            <td style="text-align: right; width: 68px;">${p.cost.toFixed(2)}</td>
-                            <td style="text-align: right; font-weight: bold; width: 78px;">${lineCost.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                        ` : ''}
-                    </tr>
+                            <td style="text-align: center; font-weight: bold; width: 50px; font-size: 10.5pt; padding: 5px 4px; border: 1px solid #94a3b8; line-height: 1.5;">${qty}</td>
+                            <td style="text-align: center; width: 50px; padding: 5px 4px; border: 1px solid #94a3b8; line-height: 1.5; font-size: 9pt;">${p.unit}</td>
+                            ${showPrice ? `
+                                <td style="text-align: right; width: 68px; padding: 5px 6px; border: 1px solid #94a3b8; line-height: 1.5; font-size: 9pt;">${p.cost.toFixed(2)}</td>
+                                <td style="text-align: right; font-weight: bold; width: 78px; padding: 5px 6px; border: 1px solid #94a3b8; line-height: 1.5; font-size: 9pt;">${lineCost.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                            ` : ''}
+                        </tr>
                     `;
-                }).join('');
+                });
 
-                grandTotalCost += catTotalCost;
-                grandTotalUnits += catTotalUnits;
+                // Construct Header HTML
+                let headerHtml = '';
+                if (isPage1) {
+                    headerHtml = `
+                        <div style="background-color: #1f4e79; color: #fff; text-align: center; font-weight: bold; font-size: 13.5pt; padding: 6px 0; border: 1.5px solid #1f4e79; border-radius: 4px 4px 0 0; line-height: 1.4;">
+                            รายการสั่งของ สหกรณ์โรงเรียนบ้านน้ำพร (Makro)
+                        </div>
+                        <div style="background-color: #ddebf7; color: #1f4e79; text-align: center; font-weight: bold; font-size: 10pt; padding: 3px 0; border-left: 1.5px solid #1f4e79; border-right: 1.5px solid #1f4e79; line-height: 1.4;">
+                            115 หมู่ 2 ต.ปากตม อ.เชียงคาน จ.เลย 42110
+                        </div>
+                        <div style="background-color: #ddebf7; color: #1f4e79; text-align: center; font-size: 8.5pt; padding: 2px 0; border-left: 1.5px solid #1f4e79; border-right: 1.5px solid #1f4e79; line-height: 1.4;">
+                            ติดต่อ ครูนิรุทธิ์ เสวะนา 081-8713581 | ครูสุภาพร พิมพุธ 093-4676466 | ผู้อำนวยการโรงเรียน นางศิวาลัย แก้วเขียว 062-5461959
+                        </div>
+                        <div style="background-color: #f8fafc; color: #475569; text-align: center; font-size: 8.5pt; padding: 3px 0; border: 1px solid #cbd5e1; border-top: 1px solid #94a3b8; margin-bottom: 8px; line-height: 1.4;">
+                            อัปเดตล่าสุด: ${dateStr} เวลา ${timeStr}
+                        </div>
+                    `;
+                } else {
+                    headerHtml = `
+                        <div style="background-color: #1f4e79; color: #fff; display: flex; align-items: center; justify-content: space-between; font-weight: bold; font-size: 10.5pt; padding: 6px 12px; border: 1.5px solid #1f4e79; border-radius: 4px; margin-bottom: 8px; line-height: 1.4;">
+                            <span>รายการสั่งของ สหกรณ์โรงเรียนบ้านน้ำพร (Makro)</span>
+                            <span style="font-size: 9pt; font-weight: normal; background: rgba(255,255,255,0.25); padding: 1px 8px; border-radius: 12px;">(ต่อหน้า ${pageNum} จาก ${totalPages})</span>
+                        </div>
+                    `;
+                }
 
-                const subtotalText = showPrice 
-                    ? `หมวด${cat} (สั่ง ${catItems.length} รายการ, ${catTotalUnits} หน่วย - รวม ฿${catTotalCost.toLocaleString('en-US', {minimumFractionDigits: 2})})`
-                    : `หมวด${cat} (สั่ง ${catItems.length} รายการ, รวม ${catTotalUnits} หน่วย)`;
+                // Construct Table & Footer HTML
+                pagesHtml += `
+                    <div class="a4-page-sheet" id="a4-page-${pageNum}">
+                        <div>
+                            ${headerHtml}
+                            <table class="a4-table" style="width: 100%; border-collapse: collapse; font-family: 'Sarabun', 'Prompt', sans-serif; font-size: 9pt; line-height: 1.55;">
+                                <thead>
+                                    <tr style="background-color: #f1f5f9; text-align: center; font-weight: bold;">
+                                        <th style="width: 34px; padding: 6px 4px; border: 1px solid #94a3b8; line-height: 1.5;">ที่</th>
+                                        <th style="width: 72px; padding: 6px 4px; border: 1px solid #94a3b8; line-height: 1.5;">รหัส Makro</th>
+                                        ${state.printWithImages ? '<th style="width: 44px; padding: 6px 2px; border: 1px solid #94a3b8; line-height: 1.5;">รูป</th>' : ''}
+                                        <th style="padding: 6px 8px; border: 1px solid #94a3b8; text-align: left; line-height: 1.5;">ชื่อสินค้า / รายการ</th>
+                                        <th style="width: 50px; padding: 6px 4px; border: 1px solid #94a3b8; line-height: 1.5;">จำนวน</th>
+                                        <th style="width: 50px; padding: 6px 4px; border: 1px solid #94a3b8; line-height: 1.5;">หน่วย</th>
+                                        ${showPrice ? `
+                                            <th style="width: 68px; padding: 6px 4px; border: 1px solid #94a3b8; line-height: 1.5;">ราคาส่ง</th>
+                                            <th style="width: 78px; padding: 6px 4px; border: 1px solid #94a3b8; line-height: 1.5;">รวมเงิน (฿)</th>
+                                        ` : ''}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rowsHtml}
+                                    ${isLastPage ? `
+                                        <tr style="background-color: #f8fafc; font-weight: bold; border-top: 2px solid #1f4e79; border-bottom: 2px solid #1f4e79;">
+                                            <td colspan="${state.printWithImages ? 4 : 3}" style="text-align: center; padding: 7px 6px; border: 1px solid #94a3b8; font-size: 9.5pt; line-height: 1.5;">
+                                                รวมทั้งสิ้น (${grandItemCount} รายการ / ${grandTotalUnits} หน่วย)
+                                            </td>
+                                            <td style="text-align: center; font-size: 11pt; color: #000; padding: 7px 4px; border: 1px solid #94a3b8; line-height: 1.5;">${grandTotalUnits}</td>
+                                            <td style="text-align: center; padding: 7px 4px; border: 1px solid #94a3b8; line-height: 1.5;">หน่วย</td>
+                                            ${showPrice ? `
+                                                <td style="text-align: right; padding: 7px 4px; border: 1px solid #94a3b8; font-size: 9pt; line-height: 1.5;">ยอดรวม:</td>
+                                                <td style="text-align: right; font-size: 10.5pt; color: #be123c; padding: 7px 6px; border: 1px solid #94a3b8; font-weight: bold; line-height: 1.5;">฿${grandTotalCost.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                                            ` : ''}
+                                        </tr>
+                                    ` : `
+                                        <tr style="background-color: #f8fafc; font-style: italic; color: #64748b; font-size: 8.5pt;">
+                                            <td colspan="${totalCols}" style="text-align: right; padding: 5px 8px; border: 1px solid #94a3b8; line-height: 1.5;">
+                                                (มีต่อหน้าถัดไป &rarr;)
+                                            </td>
+                                        </tr>
+                                    `}
+                                </tbody>
+                            </table>
+                        </div>
 
-                sectionsHtml += `
-                    <tr style="background-color: #bdd7ee; font-weight: bold; color: #1f4e79;">
-                        <td colspan="${totalCols}" style="padding: 4px 8px; font-size: 10.5pt;">
-                            ${subtotalText}
-                        </td>
-                    </tr>
-                    ${rowsHtml}
+                        <!-- Fixed Bottom Footer for each A4 Sheet -->
+                        <div style="padding-top: 6px; border-top: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: space-between; font-size: 8.5pt; color: #64748b; line-height: 1.4;">
+                            <span>สหกรณ์โรงเรียนบ้านน้ำพร (ติดต่อ ครูนิรุทธิ์ 081-8713581)</span>
+                            <span style="font-weight: 600; color: #1f4e79;">หน้า ${pageNum} จาก ${totalPages}</span>
+                        </div>
+                    </div>
                 `;
             });
 
-            printArea.innerHTML = `
-                <div style="font-family: 'Prompt', 'TH SarabunPSK', sans-serif; color: #000; width: 100%; padding: 12px; background: #fff;">
-                    <!-- OFFICIAL SCHOOL COOP HEADER -->
-                    <div style="background-color: #1f4e79; color: #fff; text-align: center; font-weight: bold; font-size: 15pt; padding: 5px 0; border: 1px solid #1f4e79;">
-                        รายการสั่งของ สหกรณ์โรงเรียนบ้านน้ำพร (Makro)
-                    </div>
-                    <div style="background-color: #ddebf7; color: #1f4e79; text-align: center; font-weight: bold; font-size: 11pt; padding: 3px 0; border-left: 1px solid #1f4e79; border-right: 1px solid #1f4e79;">
-                        115 หมู่ 2 ต.ปากตม อ.เชียงคาน จ.เลย 42110
-                    </div>
-                    <div style="background-color: #ddebf7; color: #1f4e79; text-align: center; font-size: 9.5pt; padding: 2px 0; border-left: 1px solid #1f4e79; border-right: 1px solid #1f4e79;">
-                        ติดต่อ ครูนิรุทธิ์ เสวะนา 081-8713581 ครูสุภาพร พิมพุธ 093-4676466
-                    </div>
-                    <div style="background-color: #ddebf7; color: #1f4e79; text-align: center; font-size: 9.5pt; padding: 2px 0; border-left: 1px solid #1f4e79; border-right: 1px solid #1f4e79;">
-                        ผู้อำนวยการโรงเรียน นางศิวาลัย แก้วเขียว 062-5461959
-                    </div>
-                    <div style="background-color: #f2f2f2; color: #555; text-align: center; font-style: italic; font-size: 8.5pt; padding: 2px 0; border: 1px solid #ccc; margin-bottom: 6px;">
-                        อัปเดตล่าสุด: ${dateStr} เวลา ${timeStr}
-                    </div>
-
-                    <!-- TABLE -->
-                    <table class="print-table" style="width: 100%; border-collapse: collapse; font-size: 9pt;">
-                        <thead>
-                            <tr style="background-color: #e2e8f0; text-align: center; font-weight: bold;">
-                                <th style="width: 32px;">ที่</th>
-                                <th style="width: 68px;">รหัส Makro</th>
-                                ${state.printWithImages ? '<th style="width: 42px;">รูป</th>' : ''}
-                                <th>ชื่อสินค้า / รายการ</th>
-                                <th style="width: 48px;">จำนวน</th>
-                                <th style="width: 48px;">หน่วย</th>
-                                ${showPrice ? `
-                                    <th style="width: 68px;">ราคาส่ง</th>
-                                    <th style="width: 78px;">รวมเงิน (บาท)</th>
-                                ` : ''}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${sectionsHtml}
-                            <tr style="background-color: #f1f5f9; font-weight: bold; font-size: 10pt; border-top: 2px solid #000;">
-                                <td colspan="${state.printWithImages ? 4 : 3}" style="text-align: center; padding: 6px;">
-                                    รวมทั้งสิ้น (${grandItemCount} รายการ / ${grandTotalUnits} หน่วย)
-                                </td>
-                                <td style="text-align: center; font-size: 10.5pt; color: #000;">${grandTotalUnits}</td>
-                                <td style="text-align: center;">หน่วย</td>
-                                ${showPrice ? `
-                                    <td style="text-align: right;">ยอดรวม:</td>
-                                    <td style="text-align: right; font-size: 10.5pt; color: #be123c;">฿${grandTotalCost.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                                ` : ''}
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- NOTE: Signatures removed per user request -->
-                </div>
-            `;
+            printArea.innerHTML = pagesHtml;
         }
 
         // Toast Helper
