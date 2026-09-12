@@ -1,5 +1,28 @@
 [
   {
+    "id": "act-1789207312159-of7gg",
+    "timestamp": "2026-09-12T10:01:52.157Z",
+    "type": "add_product",
+    "title": "เพิ่มสินค้าใหม่: เมจิก ฟาร์ม เฟรช น้ํามะพร้าวน้ําหอม 240 มล. x 6",
+    "details": "รหัส #194695 | ราคาส่ง ฿49.00 | หมวด เครื่องดื่ม",
+    "user": "ครูนฤทธิ์",
+    "data": {
+      "product": {
+        "id": 245,
+        "code": "194695",
+        "barcode": "8850157550819",
+        "name": "เมจิก ฟาร์ม เฟรช น้ํามะพร้าวน้ําหอม 240 มล. x 6",
+        "category": "เครื่องดื่ม",
+        "unit": "unit(s)",
+        "cost": 49,
+        "unitCost": 8.17,
+        "price": 10,
+        "image": "",
+        "imageThumb": "https://images.mango-prod.siammakro.cloud/product-images/7078765002947-63b4a198-c8d4-4095-96e5-19c17dc31eb9.jpeg"
+      }
+    }
+  },
+  {
     "id": "act-1789207140884-clniz",
     "timestamp": "2026-09-12T09:59:00.882Z",
     "type": "add_product",
