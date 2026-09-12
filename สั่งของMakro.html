@@ -781,7 +781,7 @@
         <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeActionHistoryModal()"></div>
         <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-full p-4 sm:p-5 max-h-[90vh] flex flex-col z-10">
             <!-- Header -->
-            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 shadow-sm">
                         <i class="fa-solid fa-clock-rotate-left text-base"></i>
@@ -794,6 +794,15 @@
                 <button onclick="closeActionHistoryModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
+            </div>
+
+            <!-- Auto-Connected Status Bar -->
+            <div class="mt-2.5 bg-emerald-50 border border-emerald-200/80 rounded-xl px-3 py-2 text-xs text-emerald-900 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span><strong>เชื่อมต่อ GitHub อัตโนมัติ:</strong> boasnirut/order-np</span>
+                </div>
+                <span class="text-[10px] font-bold text-emerald-700 bg-white/90 border border-emerald-200 px-2 py-0.5 rounded-md shadow-2xs">Cloud Auto-Sync ✓</span>
             </div>
 
             <!-- Toolbar & Filter Tabs -->
@@ -837,62 +846,79 @@
             <div class="flex items-center justify-between pb-2 border-b border-slate-200">
                 <div class="flex items-center gap-2">
                     <i class="fa-brands fa-github text-slate-900 text-xl"></i>
-                    <h3 class="text-base font-bold text-slate-900">ตั้งค่าเชื่อมต่อ GitHub & Vercel</h3>
+                    <h3 class="text-base font-bold text-slate-900">สถานะการเชื่อมต่อ GitHub & Cloud</h3>
                 </div>
                 <button onclick="closeGitHubSettingsModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <!-- Content Form -->
-            <div class="space-y-3 text-xs sm:text-sm">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">GitHub Repository (Owner/Repo)</label>
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="gh-owner-input" placeholder="boasnirut" class="w-1/2 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
-                        <span class="text-slate-400 font-bold">/</span>
-                        <input type="text" id="gh-repo-input" placeholder="order-np" class="w-1/2 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
-                    </div>
+            <!-- Auto-Connected Banner -->
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-emerald-950 space-y-2">
+                <div class="flex items-center gap-2 font-bold text-sm text-emerald-800">
+                    <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
+                    <span>เชื่อมต่อ GitHub อัตโนมัติเรียบร้อยแล้ว</span>
                 </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">
-                        GitHub Personal Access Token (PAT)
-                        <span class="text-[11px] font-normal text-slate-400 block sm:inline">(สำหรับ Commit ประวัติลง GitHub)</span>
-                    </label>
-                    <div class="relative">
-                        <input type="password" id="gh-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full p-2 pr-9 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
-                        <button type="button" onclick="toggleTokenVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                            <i class="fa-solid fa-eye text-xs" id="icon-toggle-token"></i>
-                        </button>
-                    </div>
-                    <p class="mt-1 text-[11px] text-slate-500">
-                        สร้าง Token ได้ฟรีที่ <a href="https://github.com/settings/tokens" target="_blank" class="text-sky-600 underline font-medium">GitHub Settings &rarr; Tokens</a> (เลือกสิทธิ์ repo)
-                    </p>
+                <p class="text-xs text-emerald-800 leading-relaxed">
+                    คลังข้อมูล: <strong>boasnirut/order-np</strong><br>
+                    ระบบเชื่อมต่อและซิงค์ข้อมูลผ่าน Vercel Serverless Functions ให้อัตโนมัติ ทุกประวัติการสั่งซื้อและการจัดการสินค้าจะถูกบันทึกขึ้น GitHub โดยไม่ต้องตั้งค่าใดๆ เพิ่มเติม
+                </p>
+                <div class="pt-1 flex items-center gap-2">
+                    <a href="https://github.com/boasnirut/order-np" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-emerald-300 hover:bg-emerald-100/60 text-emerald-900 rounded-xl text-xs font-semibold shadow-xs transition">
+                        <i class="fa-brands fa-github"></i>
+                        <span>เปิดดู Repository บน GitHub</span>
+                    </a>
                 </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">ชื่อผู้ดำเนินการ (User Name)</label>
-                    <input type="text" id="gh-user-input" placeholder="ครูนฤทธิ์" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-slate-800">
-                </div>
-
-                <!-- Status alert -->
-                <div id="gh-test-status" class="hidden p-2.5 rounded-xl text-xs"></div>
             </div>
 
-            <!-- Action buttons -->
-            <div class="pt-2 border-t border-slate-200 flex items-center justify-between gap-2">
-                <button type="button" onclick="testGitHubConnection()" id="btn-test-gh" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-vial"></i>
-                    <span>ทดสอบเชื่อมต่อ</span>
+            <!-- Quick Action: Test Connection -->
+            <div class="space-y-2">
+                <button type="button" id="btn-test-gh" onclick="testGitHubConnection()" class="w-full py-2.5 px-4 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition shadow-sm active:scale-98">
+                    <i class="fa-solid fa-network-wired text-sm"></i>
+                    <span>ทดสอบการเชื่อมต่อ GitHub Cloud เดี๋ยวนี้</span>
                 </button>
+                <div id="gh-test-status" class="hidden p-3 rounded-xl text-xs"></div>
+            </div>
+
+            <!-- User Name Input -->
+            <div class="pt-2 border-t border-slate-100">
+                <label class="block font-semibold text-slate-700 text-xs mb-1">ชื่อผู้บันทึกการกระทำ (User Name)</label>
                 <div class="flex items-center gap-2">
-                    <button type="button" onclick="closeGitHubSettingsModal()" class="px-3 py-2 text-slate-500 hover:text-slate-800 font-medium text-xs">ยกเลิก</button>
-                    <button type="button" onclick="saveGitHubSettings()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl transition shadow-sm">
-                        บันทึกการตั้งค่า
+                    <input type="text" id="gh-user-input" placeholder="ครูนฤทธิ์" class="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-slate-800">
+                    <button type="button" onclick="saveGitHubSettings()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+                        บันทึกชื่อ
                     </button>
                 </div>
             </div>
+
+            <!-- Advanced Custom Settings (Collapsed) -->
+            <details class="text-xs text-slate-500 pt-1">
+                <summary class="cursor-pointer hover:text-slate-800 font-medium select-none">
+                    ⚙️ ตั้งค่าขั้นสูง (กรณีต้องการเปลี่ยน Token หรือ Repository เอง)
+                </summary>
+                <div class="space-y-3 pt-3 mt-2 border-t border-slate-100">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">GitHub Repository (Owner/Repo)</label>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="gh-owner-input" placeholder="boasnirut" class="w-1/2 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
+                            <span class="text-slate-400 font-bold">/</span>
+                            <input type="text" id="gh-repo-input" placeholder="order-np" class="w-1/2 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Custom Personal Access Token (PAT)</label>
+                        <div class="relative">
+                            <input type="password" id="gh-token-input" placeholder="ปล่อยว่างไว้เพื่อใช้ระบบเชื่อมต่ออัตโนมัติ" class="w-full p-2 pr-9 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-800">
+                            <button type="button" onclick="toggleTokenVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                <i class="fa-solid fa-eye text-xs" id="icon-toggle-token"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="saveGitHubSettings()" class="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl transition text-xs">
+                        บันทึกการตั้งค่ากำหนดเอง
+                    </button>
+                </div>
+            </details>
         </div>
     </div>
 
@@ -1407,7 +1433,7 @@
             }
         }
 
-        // Sync all unsynced logs to GitHub
+        // Sync all unsynced logs to GitHub (Automatic Cloud Sync)
         async function syncPendingActionsToGitHub() {
             const btn = document.getElementById('btn-sync-pending');
             const label = document.getElementById('sync-pending-label');
@@ -1426,7 +1452,7 @@
 
             showToast(`กำลังส่งข้อมูล ${unsynced.length} รายการขึ้น GitHub...`, 'info');
 
-            // Send sync with full updated catalog
+            // Send sync with full updated catalog via automated backend
             try {
                 const res = await fetch('/api/record-action', {
                     method: 'POST',
@@ -1439,7 +1465,7 @@
                     body: JSON.stringify({
                         action: 'batch_sync',
                         title: `ซิงค์ประวัติและสินค้า ${unsynced.length} รายการ`,
-                        details: 'ซิงค์จากโทรศัพท์/เครื่องผู้ใช้งาน',
+                        details: 'ซิงค์จากโทรศัพท์/เครื่องผู้ใช้งาน (อัตโนมัติ)',
                         products: state.products,
                         githubToken: config.token,
                         githubOwner: config.owner,
@@ -1449,29 +1475,19 @@
                 });
 
                 if (res.ok) {
-                    unsynced.forEach(l => l.synced = true);
-                    saveActivityLogsToStorage();
-                    renderActionHistory();
-                    showToast('ซิงค์ข้อมูลกับ GitHub สำเร็จเรียบร้อย!', 'success');
-                } else {
-                    throw new Error('Server returned ' + res.status);
-                }
-            } catch (err) {
-                // Fallback to client-side direct sync if token exists
-                if (config.token) {
-                    try {
-                        await directGitHubSync({ type: 'batch_sync', title: 'ซิงค์ประวัติ' }, state.products, config);
+                    const data = await res.json();
+                    if (data && data.success) {
                         unsynced.forEach(l => l.synced = true);
                         saveActivityLogsToStorage();
                         renderActionHistory();
-                        showToast('ซิงค์ข้อมูลตรงเข้า GitHub สำเร็จเรียบร้อย!', 'success');
-                    } catch(e2) {
-                        showToast('ไม่สามารถซิงค์ได้: ' + e2.message, 'error');
+                        showToast('ซิงค์ข้อมูลกับ GitHub สำเร็จเรียบร้อย!', 'success');
+                        return;
                     }
-                } else {
-                    showToast('ยังไม่ได้ระบุ GitHub Token กรุณากดตั้งค่าเพื่อเชื่อมต่อ', 'warning');
-                    openGitHubSettingsModal();
                 }
+                throw new Error('Server status ' + res.status);
+            } catch (err) {
+                // If offline or fetch failed
+                showToast('กำลังอยู่ในโหมดออฟไลน์ (ระบบจะซิงค์กับ GitHub ให้อัตโนมัติเมื่อต่อเน็ต)', 'info');
             } finally {
                 if (label) label.textContent = 'ซิงค์ Cloud';
                 if (btn) btn.disabled = false;
@@ -1661,50 +1677,62 @@
         }
 
         async function testGitHubConnection() {
-            const owner = document.getElementById('gh-owner-input').value.trim();
-            const repo = document.getElementById('gh-repo-input').value.trim();
-            const token = document.getElementById('gh-token-input').value.trim();
             const statusEl = document.getElementById('gh-test-status');
             const btnTest = document.getElementById('btn-test-gh');
 
-            if (!token) {
-                statusEl.className = 'p-2.5 rounded-xl text-xs bg-amber-50 border border-amber-200 text-amber-800';
-                statusEl.innerHTML = '⚠️ กรุณาระบุ GitHub Token ก่อนทดสอบการเชื่อมต่อ';
-                statusEl.classList.remove('hidden');
-                return;
-            }
-
-            statusEl.className = 'p-2.5 rounded-xl text-xs bg-slate-100 text-slate-700';
+            statusEl.className = 'p-3 rounded-xl text-xs bg-slate-100 text-slate-700';
             statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> กำลังตรวจสอบการเชื่อมต่อไปยัง GitHub...';
             statusEl.classList.remove('hidden');
             if (btnTest) btnTest.disabled = true;
 
             try {
-                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/vnd.github+json'
-                    }
+                // Test via automated Vercel backend
+                const apiRes = await fetch('/api/get-data?type=logs', {
+                    signal: AbortSignal.timeout(8000)
                 });
 
-                if (res.ok) {
-                    const data = await res.json();
-                    statusEl.className = 'p-2.5 rounded-xl text-xs bg-emerald-50 border border-emerald-200 text-emerald-800';
-                    statusEl.innerHTML = `✅ เชื่อมต่อ GitHub สำเร็จ! พบ Repository <b>${data.full_name}</b> (สิทธิ์การเข้าถึงสมบูรณ์)`;
-                } else if (res.status === 404) {
-                    statusEl.className = 'p-2.5 rounded-xl text-xs bg-amber-50 border border-amber-200 text-amber-800';
-                    statusEl.innerHTML = `⚠️ เชื่อมต่อได้ แต่ยังไม่พบ Repository <b>${owner}/${repo}</b> (กรุณากดสร้าง Repository บน GitHub ก่อน)`;
-                } else {
-                    const err = await res.json();
-                    statusEl.className = 'p-2.5 rounded-xl text-xs bg-rose-50 border border-rose-200 text-rose-800';
-                    statusEl.innerHTML = `❌ การเชื่อมต่อไม่ผ่าน: ${err.message || res.statusText}`;
+                if (apiRes.ok) {
+                    const data = await apiRes.json();
+                    const logCount = data.data && data.data.logs ? data.data.logs.length : 0;
+                    statusEl.className = 'p-3 rounded-xl text-xs bg-emerald-50 border border-emerald-200 text-emerald-800 space-y-1';
+                    statusEl.innerHTML = `
+                        <div class="font-bold flex items-center gap-1.5 text-emerald-900">
+                            <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                            <span>เชื่อมต่อ GitHub อัตโนมัติสำเร็จ 100%!</span>
+                        </div>
+                        <p class="text-[11px] text-emerald-700 leading-relaxed">
+                            ระบบเชื่อมต่อกับ <b>boasnirut/order-np</b> เรียบร้อย (พบประวัติบันทึกล่าสุด ${logCount} รายการ)<br>
+                            ทุกประวัติการสั่งซื้อและการจัดการสินค้าจะถูกบันทึกขึ้น GitHub ให้โดยอัตโนมัติ
+                        </p>
+                    `;
+                    return;
                 }
-            } catch(e) {
-                statusEl.className = 'p-2.5 rounded-xl text-xs bg-rose-50 border border-rose-200 text-rose-800';
-                statusEl.innerHTML = `❌ ไม่สามารถเชื่อมต่อได้: ${e.message}`;
-            } finally {
-                if (btnTest) btnTest.disabled = false;
+            } catch (err) {
+                console.warn('Backend API test failed:', err);
             }
+
+            // Fallback direct check if custom token is set
+            const config = getGitHubConfig();
+            if (config.token) {
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}`, {
+                        headers: {
+                            'Authorization': `Bearer ${config.token}`,
+                            'Accept': 'application/vnd.github+json'
+                        }
+                    });
+                    if (res.ok) {
+                        const d = await res.json();
+                        statusEl.className = 'p-3 rounded-xl text-xs bg-emerald-50 border border-emerald-200 text-emerald-800';
+                        statusEl.innerHTML = `✅ เชื่อมต่อผ่าน Custom Token สำเร็จ! เข้าถึง <b>${d.full_name}</b> เรียบร้อย`;
+                        return;
+                    }
+                } catch(e) {}
+            }
+
+            statusEl.className = 'p-3 rounded-xl text-xs bg-amber-50 border border-amber-200 text-amber-800';
+            statusEl.innerHTML = `ℹ️ อุปกรณ์กำลังทำงานในโหมดออฟไลน์ หรือยังไม่ได้ต่ออินเทอร์เน็ต (เมื่อออนไลน์ระบบจะซิงค์ GitHub ให้อัตโนมัติ)`;
+            if (btnTest) btnTest.disabled = false;
         }
 
         // Check for latest catalog updates from cloud

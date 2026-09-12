@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
 
     const type = (req.query && req.query.type) ? req.query.type : 'all';
     const githubToken = process.env.GITHUB_TOKEN || req.headers['x-github-token'] || req.query.token || '';
-    const githubOwner = process.env.GITHUB_OWNER || req.headers['x-github-owner'] || req.query.owner || 'boasnirut';
+    const githubOwner = process.env.GITHUB_OWNER || req.headers['x-github-owner'] || req.query.repo_owner || 'boasnirut';
     const githubRepo = process.env.GITHUB_REPO || req.headers['x-github-repo'] || req.query.repo || 'order-np';
 
     // If GitHub token provided, fetch fresh from GitHub API

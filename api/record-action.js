@@ -22,7 +22,7 @@ module.exports = async function handler(req, res) {
     const updatedProducts = payload.products || null;
     const userName = payload.user || 'ครูนฤทธิ์ (boasnirut)';
 
-    // GitHub configuration from ENV or request headers/body
+    // GitHub configuration from Vercel Environment Variables or request
     const githubToken = process.env.GITHUB_TOKEN || req.headers['x-github-token'] || payload.githubToken || '';
     const githubOwner = process.env.GITHUB_OWNER || req.headers['x-github-owner'] || payload.githubOwner || 'boasnirut';
     const githubRepo = process.env.GITHUB_REPO || req.headers['x-github-repo'] || payload.githubRepo || 'order-np';
