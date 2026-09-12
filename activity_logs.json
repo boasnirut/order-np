@@ -1,5 +1,28 @@
 [
   {
+    "id": "act-1789207484134-b83b2",
+    "timestamp": "2026-09-12T10:04:44.131Z",
+    "type": "add_product",
+    "title": "เพิ่มสินค้าใหม่: โทมิ น้ํายาถูพื้น ดีลักซ์เพอร์ฟูม ชมพู 550 มล.",
+    "details": "รหัส #8851989041711 | ราคาส่ง ฿58.00 | หมวด เครื่องปรุง-ทั่วไป",
+    "user": "ครูนฤทธิ์",
+    "data": {
+      "product": {
+        "id": 246,
+        "code": "8851989041711",
+        "barcode": "undefined",
+        "name": "โทมิ น้ํายาถูพื้น ดีลักซ์เพอร์ฟูม ชมพู 550 มล.",
+        "category": "เครื่องปรุง-ทั่วไป",
+        "unit": "unit(s)",
+        "cost": 58,
+        "unitCost": 0,
+        "price": 60,
+        "image": "",
+        "imageThumb": "https://images.mango-prod.siammakro.cloud/SOURCE/893d27a5d68a4eb99bc04e2147dfc030"
+      }
+    }
+  },
+  {
     "id": "act-1789207312159-of7gg",
     "timestamp": "2026-09-12T10:01:52.157Z",
     "type": "add_product",
