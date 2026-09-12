@@ -1,5 +1,28 @@
 [
   {
+    "id": "act-1789207140884-clniz",
+    "timestamp": "2026-09-12T09:59:00.882Z",
+    "type": "add_product",
+    "title": "เพิ่มสินค้าใหม่: ไมโล เวเฟอร์ ช็อคโกแลต 18.6 ก. x 12",
+    "details": "รหัส #318808 | ราคาส่ง ฿100.00 | หมวด ขนม",
+    "user": "ครูนฤทธิ์",
+    "data": {
+      "product": {
+        "id": 244,
+        "code": "318808",
+        "barcode": "undefined",
+        "name": "ไมโล เวเฟอร์ ช็อคโกแลต 18.6 ก. x 12",
+        "category": "ขนม",
+        "unit": "unit(s)",
+        "cost": 100,
+        "unitCost": 8.33,
+        "price": 10,
+        "image": "",
+        "imageThumb": "https://images.mango-prod.siammakro.cloud/product-images/731880805974372-6cc73648-f31d-48e4-b7b7-f83bf48801b4.jpeg"
+      }
+    }
+  },
+  {
     "id": "act-1789206490573-5y11g",
     "timestamp": "2026-09-12T09:48:10.572Z",
     "type": "test_auto_connect",
