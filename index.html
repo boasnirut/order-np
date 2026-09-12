@@ -316,9 +316,9 @@
                         <span>เพิ่มสินค้าใหม่</span>
                     </button>
                     <span class="text-slate-300">|</span>
-                    <button onclick="clearCartConfirm()" class="text-slate-500 hover:text-rose-600 flex items-center gap-1 transition">
+                    <button onclick="clearCartConfirm()" class="text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-2 py-0.5 rounded-lg border border-rose-200 flex items-center gap-1 transition text-xs font-medium" title="เคลียร์รายการสินค้าที่เลือกสั่งทั้งหมด">
                         <i class="fa-solid fa-trash-can text-xs"></i>
-                        <span>ล้างรายการที่สั่ง</span>
+                        <span>เคลียร์รายการที่เลือก</span>
                     </button>
                 </div>
             </div>
@@ -410,6 +410,12 @@
 
             <!-- Right: Action Buttons -->
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button onclick="clearCartConfirm()" id="btn-clear-cart-bottom" class="hidden px-2.5 sm:px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-medium text-xs sm:text-sm flex items-center justify-center gap-1.5 transition border border-rose-200 active:scale-95 shadow-xs" title="เคลียร์รายการที่เลือกสั่งทั้งหมด">
+                    <i class="fa-solid fa-trash-can text-rose-600"></i>
+                    <span class="hidden sm:inline">เคลียร์รายการ</span>
+                    <span class="sm:hidden">เคลียร์</span>
+                </button>
+
                 <button onclick="openCartDrawer()" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-xs sm:text-sm flex items-center justify-center gap-1.5 transition shadow-sm">
                     <i class="fa-solid fa-list-check text-slate-600"></i>
                     <span>ตรวจดูรายการ</span>
@@ -445,9 +451,15 @@
                             <p class="text-xs text-slate-500" id="drawer-header-subtitle">0 รายการที่เลือกสั่ง</p>
                         </div>
                     </div>
-                    <button onclick="closeCartDrawer()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-200/50 transition">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="clearCartConfirm()" class="text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-100/70 bg-rose-50 px-2.5 py-1.5 rounded-lg font-semibold transition flex items-center gap-1 border border-rose-200 shadow-2xs active:scale-95" title="เคลียร์รายการที่เลือกสั่งทั้งหมด">
+                            <i class="fa-solid fa-trash-can text-rose-500"></i>
+                            <span>เคลียร์ทั้งหมด</span>
+                        </button>
+                        <button onclick="closeCartDrawer()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-200/50 transition">
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="flex-1 overflow-y-auto p-4 divide-y divide-slate-100 custom-scrollbar" id="drawer-items-list">
@@ -489,6 +501,11 @@
                     <button onclick="saveOrderDraft()" class="w-full px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition shadow-sm">
                         <i class="fa-solid fa-floppy-disk text-xs"></i>
                         <span>บันทึกเก็บเป็นประวัติการสั่งซื้อ</span>
+                    </button>
+
+                    <button onclick="clearCartConfirm()" class="w-full py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition active:scale-98">
+                        <i class="fa-solid fa-trash-can text-rose-600"></i>
+                        <span>เคลียร์รายการที่เลือกสั่งทั้งหมด</span>
                     </button>
                 </div>
             </div>
@@ -625,6 +642,10 @@
                 <button type="button" id="btn-download-all-pages" onclick="downloadAllOrderPages()" class="hidden w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-images text-slate-500"></i>
                     <span>ดาวน์โหลดทุกหน้าลงเครื่อง</span>
+                </button>
+                <button type="button" onclick="closeOrderImageModal(); clearCartConfirm();" class="w-full py-1.5 text-center text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 border border-dashed border-rose-200">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                    <span>เคลียร์รายการในตะกร้า (เริ่มสั่งรอบใหม่)</span>
                 </button>
                 <button type="button" onclick="closeOrderImageModal()" class="w-full py-1 text-center text-slate-400 hover:text-slate-600 text-xs font-medium transition">
                     ปิดหน้าต่าง
@@ -1873,17 +1894,22 @@
         }
 
         function clearCartConfirm() {
-            const count = Object.keys(state.cart).length;
+            const orderedIds = Object.keys(state.cart).filter(id => (state.cart[id] || 0) > 0);
+            const count = orderedIds.length;
             if (count === 0) {
                 showToast('ยังไม่มีรายการที่เลือกสั่งในขณะนี้', 'info');
                 return;
             }
-            if (confirm('คุณต้องการล้างรายการสินค้าที่เลือกสั่งทั้งหมด ' + count + ' รายการ ใช่หรือไม่?')) {
+            if (confirm(`คุณต้องการเคลียร์รายการสินค้าที่เลือกสั่งทั้งหมด (${count} รายการ) ใช่หรือไม่?`)) {
                 state.cart = {};
                 saveCartToStorage();
                 renderCatalog();
                 updateSummaryUI();
-                showToast('ล้างรายการสั่งซื้อเรียบร้อยแล้ว', 'success');
+                const drawer = document.getElementById('cart-drawer');
+                if (drawer && !drawer.classList.contains('hidden')) {
+                    renderDrawerItems();
+                }
+                showToast('เคลียร์รายการสินค้าที่เลือกทั้งหมดเรียบร้อยแล้ว', 'success');
             }
         }
 
@@ -2209,6 +2235,16 @@
             document.getElementById('drawer-summary-skus').textContent = `${totalSkus} รายการ`;
             document.getElementById('drawer-summary-units').textContent = `${totalUnits} หน่วย`;
             document.getElementById('drawer-summary-total').textContent = `฿${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            // Toggle bottom clear cart button visibility
+            const clearBottomBtn = document.getElementById('btn-clear-cart-bottom');
+            if (clearBottomBtn) {
+                if (totalSkus > 0) {
+                    clearBottomBtn.classList.remove('hidden');
+                } else {
+                    clearBottomBtn.classList.add('hidden');
+                }
+            }
 
             const drawer = document.getElementById('cart-drawer');
             if (!drawer.classList.contains('hidden')) {
