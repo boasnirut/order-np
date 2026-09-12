@@ -1,5 +1,28 @@
 [
   {
+    "id": "act-1789209827895-sobn9",
+    "timestamp": "2026-09-12T10:43:47.893Z",
+    "type": "add_product",
+    "title": "เพิ่มสินค้าใหม่: เทสโต เดวิล มันฝรั่งแผ่นหยัก รสพริกจักรพรรดิ์ 42 ก. x 6",
+    "details": "รหัส #837924 | ราคาส่ง ฿102.50 | หมวด ขนม",
+    "user": "ครูนฤทธิ์",
+    "data": {
+      "product": {
+        "id": 245,
+        "code": "837924",
+        "barcode": "8851004418030",
+        "name": "เทสโต เดวิล มันฝรั่งแผ่นหยัก รสพริกจักรพรรดิ์ 42 ก. x 6",
+        "category": "ขนม",
+        "unit": "unit(s)",
+        "cost": 102.5,
+        "unitCost": 17.08,
+        "price": 20,
+        "image": "",
+        "imageThumb": "https://images.mango-prod.siammakro.cloud/product-images/7324999450819-4c528d42-3fde-4132-b894-399ce92d64c7.jpeg"
+      }
+    }
+  },
+  {
     "id": "act-1789209505443-u38mi",
     "timestamp": "2026-09-12T10:38:25.443Z",
     "type": "create_order",
