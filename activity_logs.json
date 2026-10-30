@@ -1,5 +1,28 @@
 [
   {
+    "id": "act-1793364154630-pb1p9",
+    "timestamp": "2026-10-30T12:42:34.628Z",
+    "type": "add_product",
+    "title": "เพิ่มสินค้าใหม่: บรีสเอกเซล เอกเซล คอมฟอร์ท ผงซักฟอกสูตรเข้มข้น สีชมพู 75 มล. x 12",
+    "details": "รหัส #162795 | ราคาส่ง ฿83.00 | หมวด เครื่องปรุง-ทั่วไป",
+    "user": "ครูนฤทธิ์",
+    "data": {
+      "product": {
+        "id": 248,
+        "code": "162795",
+        "barcode": "8851932171977",
+        "name": "บรีสเอกเซล เอกเซล คอมฟอร์ท ผงซักฟอกสูตรเข้มข้น สีชมพู 75 มล. x 12",
+        "category": "เครื่องปรุง-ทั่วไป",
+        "unit": "unit(s)",
+        "cost": 83,
+        "unitCost": 6.92,
+        "price": 10,
+        "image": "",
+        "imageThumb": "https://images.mango-prod.siammakro.cloud/product-images/6761207038147-4165c5cd-0e32-4ff5-9acf-40e55496e87f.jpeg"
+      }
+    }
+  },
+  {
     "id": "act-1793363624640-jo9oi",
     "timestamp": "2026-10-30T12:33:44.638Z",
     "type": "create_order",
